@@ -1,4 +1,6 @@
+import click
 import subprocess
+from utils import get_repository_name
 
 
 class Git(object):
@@ -7,7 +9,9 @@ class Git(object):
 
     def _git_command(self, command=None):
         for repository in self.repositories:
-            subprocess.call(['git', command, repository, '../' + repository])
+            repository_path = '../' + get_repository_name(repository)
+            click.echo('Cloning [{}] into [{}]'.format(repository, repository_path))
+            subprocess.call(['git', command, repository, repository_path])
 
     def clone(self):
         self._git_command('clone')
