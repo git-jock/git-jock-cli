@@ -1,7 +1,8 @@
 import subprocess
 
 import click
-from utils import get_repository_name
+
+from jockcli.utils import get_repository_name
 
 
 class Git(object):
@@ -12,10 +13,10 @@ class Git(object):
         for repository in self.repositories:
             repository_path = '../' + get_repository_name(repository)
             click.echo('Cloning [{}] into [{}]'.format(repository, repository_path))
-            subprocess.call(['git', 'clone', repository, repository_path])
+            subprocess.run(['git', 'clone', repository, repository_path])
 
     def pull(self):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name
             click.echo('Pulling in [{}]'.format(repository_path))
-            subprocess.call(['git', '-C', repository_path, 'pull'])
+            subprocess.run(['git', '-C', repository_path, 'pull'])

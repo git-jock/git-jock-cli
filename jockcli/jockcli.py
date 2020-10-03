@@ -1,20 +1,21 @@
 import click
-from git import Git
+
+from jockcli.git import Git
 
 
 @click.group()
-def cli():
+def jock_cli():
     pass
 
 
-@cli.command()
+@jock_cli.command()
 @click.argument('repositories', type=str, nargs=-1)
 def clone(repositories):
     git = Git(repositories)
     git.clone()
 
 
-@cli.command()
+@jock_cli.command()
 @click.argument('repositories', type=str, nargs=-1)
 def pull(repositories):
     git = Git(repositories)
@@ -22,4 +23,4 @@ def pull(repositories):
 
 
 if __name__ == '__main__':
-    cli()
+    jock_cli()
