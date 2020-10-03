@@ -1,10 +1,10 @@
-name: Verify
+name: Validate Python
 
 on:
   push
 
 jobs:
-  verify:
+  validate_python:
     runs-on: ubuntu-latest
     strategy:
       matrix:
