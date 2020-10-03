@@ -19,32 +19,44 @@ class TestGit(TestCase):
             'repo3'
         )
 
+    @staticmethod
+    def _get_clone_call(repository_address, repository_name):
+        return call([
+            'git',
+            'clone',
+            repository_address,
+            '../' + repository_name
+        ])
+
     @patch.object(subprocess, 'run')
     def test_clone_clones_all(self, mock_run):
         # Given
         git = Git(self.repository_addresses)
-        expected_calls = [
-            call(['git', 'clone', self.repository_addresses[0], '../' + self.repository_names[0]]),
-            call(['git', 'clone', self.repository_addresses[1], '../' + self.repository_names[1]]),
-            call(['git', 'clone', self.repository_addresses[2], '../' + self.repository_names[2]])
-        ]
+        expected_calls = map(
+            self._get_clone_call,
+            self.repository_addresses,
+            self.repository_names
+        )
         # When
         git.clone()
         # Then
         mock_run.assert_has_calls(expected_calls)
-        self.assertEqual(mock_run.call_count, len(expected_calls))
+        self.assertEqual(mock_run.call_count, len(self.repository_addresses))
+
+    @staticmethod
+    def _get_pull_call(repository_name):
+        return call(['git', '-C', '../' + repository_name, 'pull'])
 
     @patch.object(subprocess, 'run')
     def test_pull_pulls_all(self, mock_run):
         # Given
         git = Git(self.repository_names)
-        expected_calls = [
-            call(['git', '-C', '../' + self.repository_names[0], 'pull']),
-            call(['git', '-C', '../' + self.repository_names[1], 'pull']),
-            call(['git', '-C', '../' + self.repository_names[2], 'pull'])
-        ]
+        expected_calls = map(
+            self._get_pull_call,
+            self.repository_names
+        )
         # When
         git.pull()
         # Then
         mock_run.assert_has_calls(expected_calls)
-        self.assertEqual(mock_run.call_count, len(expected_calls))
+        self.assertEqual(mock_run.call_count, len(self.repository_names))

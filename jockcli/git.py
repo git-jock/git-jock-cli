@@ -12,7 +12,9 @@ class Git(object):
     def clone(self):
         for repository in self.repositories:
             repository_path = '../' + get_repository_name(repository)
-            click.echo('Cloning [{}] into [{}]'.format(repository, repository_path))
+            click.echo(
+                'Cloning [{}] into [{}]'.format(repository, repository_path)
+            )
             subprocess.run(['git', 'clone', repository, repository_path])
 
     def pull(self):
