@@ -5,5 +5,6 @@ REPOSITORY_NAME_PATTERN_GROUP = 1
 
 
 def get_repository_name(repository):
-    if match := re.search(REPOSITORY_NAME_PATTERN, repository, re.IGNORECASE):
+    match = re.search(REPOSITORY_NAME_PATTERN, repository, re.IGNORECASE)
+    if match:
         return match.group(REPOSITORY_NAME_PATTERN_GROUP)
