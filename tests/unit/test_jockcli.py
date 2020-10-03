@@ -11,8 +11,8 @@ class TestJockCLI(TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
-    @patch.object(Git, '__init__')
-    def test_clone_git_init(self, mock_init):
+    @patch('jockcli.jockcli.Git')
+    def test_clone_git_init(self, git_mock):
         # Given
         repository_addresses = (
             'git@github.com:some-owner/repo-1.git',
@@ -22,12 +22,33 @@ class TestJockCLI(TestCase):
         # When
         self.runner.invoke(jock_cli, ('clone',) + repository_addresses)
         # Then
-        mock_init.assert_called_once_with(repository_addresses)
+        git_mock.assert_called_once_with(repository_addresses)
 
     @patch.object(Git, 'clone')
     def test_clone_git_clone(self, mock_init):
         # Given
         # When
         self.runner.invoke(jock_cli, ('clone', 'asd'))
+        # Then
+        mock_init.assert_called_once()
+
+    @patch('jockcli.jockcli.Git')
+    def test_pull_git_init(self, git_mock):
+        # Given
+        repository_names = (
+            'repo-1',
+            'r-e-p-o-2',
+            'repo3'
+        )
+        # When
+        self.runner.invoke(jock_cli, ('pull',) + repository_names)
+        # Then
+        git_mock.assert_called_once_with(repository_names)
+
+    @patch.object(Git, 'pull')
+    def test_pull_git_pull(self, mock_init):
+        # Given
+        # When
+        self.runner.invoke(jock_cli, ('pull', 'dsa'))
         # Then
         mock_init.assert_called_once()
