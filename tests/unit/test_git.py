@@ -1,11 +1,11 @@
 import subprocess
-import unittest
+from unittest import TestCase
 from unittest.mock import call, patch
 
 from jockcli.git import Git
 
 
-class TestGit(unittest.TestCase):
+class TestGit(TestCase):
     def setUp(self):
         self.repository_addresses = (
             'git@github.com:some-owner/repo-1.git',
