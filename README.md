@@ -9,6 +9,7 @@ Much like this image, the tool is under construction.
 :construction: :construction_worker_man: :building_construction: :construction_worker_woman: :construction:
 
 </p>
+
 ## What is Jock CLI?
 
 The CLI is intended to make dealing with multiple connected repositories easier, by grouping repositories and running 
