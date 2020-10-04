@@ -60,3 +60,21 @@ class TestGit(TestCase):
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
+
+    @staticmethod
+    def _get_fetch_call(repository_name):
+        return call(['git', 'fetch', '../' + repository_name])
+
+    @patch.object(subprocess, 'run')
+    def test_fetch_fetches_all(self, mock_run):
+        # Given
+        git = Git(self.repository_names)
+        expected_calls = map(
+            self._get_fetch_call,
+            self.repository_names
+        )
+        # When
+        git.fetch()
+        # Then
+        mock_run.assert_has_calls(expected_calls)
+        self.assertEqual(mock_run.call_count, len(self.repository_names))
