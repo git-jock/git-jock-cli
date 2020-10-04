@@ -3,16 +3,10 @@
 Much like this image, the tool is under construction.
 
 <p align="center">
-
 <img src="docresrouces/jock.png" data-canonical-src="docresrouces/jock.png" height="400" alt="Jock" title="Jock"/>
-
 </p>
 
-<p align="center">
-
-:construction: :construction_worker_man: :building_construction: :construction_worker_woman: :construction:
-
-</p>
+<h1 align="center">:construction: :construction_worker_man: :building_construction: :construction_worker_woman: :construction:</h1>
 
 ## What is Jock CLI?
 
