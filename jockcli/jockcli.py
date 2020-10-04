@@ -29,5 +29,12 @@ def fetch(repositories):
     git.fetch()
 
 
+@jock_cli.command()
+@click.argument('repositories', type=str, nargs=-1)
+def push(repositories):
+    git = Git(repositories)
+    git.push()
+
+
 if __name__ == '__main__':
     jock_cli()
