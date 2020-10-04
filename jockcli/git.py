@@ -22,3 +22,9 @@ class Git(object):
             repository_path = '../' + repository_name
             click.echo('Pulling in [{}]'.format(repository_path))
             subprocess.run(['git', '-C', repository_path, 'pull'])
+
+    def fetch(self):
+        for repository_name in self.repositories:
+            repository_path = '../' + repository_name
+            click.echo('Fetching from [{}]'.format(repository_path))
+            subprocess.run(['git', 'fetch', repository_path])
