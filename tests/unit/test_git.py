@@ -66,7 +66,7 @@ class TestGit(TestCase):
         return call(['git', 'fetch', '../' + repository_name])
 
     @patch.object(subprocess, 'run')
-    def test_pull_fetches_all(self, mock_run):
+    def test_fetch_fetches_all(self, mock_run):
         # Given
         git = Git(self.repository_names)
         expected_calls = map(
