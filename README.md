@@ -2,10 +2,13 @@
 
 Much like this image, the tool is under construction.
 
+<div style="text-align: center;">
+
 <img src="docresrouces/jock.png" data-canonical-src="docresrouces/jock.png" height="400" alt="Jock" title="Jock"/>
 
 :construction: :construction_worker_man: :building_construction: :construction_worker_woman: :construction:
 
+</div>
 ## What is Jock CLI?
 
 The CLI is intended to make dealing with multiple connected repositories easier, by grouping repositories and running 
