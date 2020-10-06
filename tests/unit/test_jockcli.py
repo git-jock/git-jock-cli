@@ -52,3 +52,24 @@ class TestJockCLI(TestCase):
         self.runner.invoke(jock_cli, ('pull', 'dsa'))
         # Then
         mock_init.assert_called_once()
+
+    @patch('jockcli.jockcli.Git')
+    def test_fetch_git_init(self, git_mock):
+        # Given
+        repository_names = (
+            'repo-1',
+            'r-e-p-o-2',
+            'repo3'
+        )
+        # When
+        self.runner.invoke(jock_cli, ('fetch',) + repository_names)
+        # Then
+        git_mock.assert_called_once_with(repository_names)
+
+    @patch.object(Git, 'fetch')
+    def test_fetch_git_fetch(self, mock_init):
+        # Given
+        # When
+        self.runner.invoke(jock_cli, ('fetch', 'dsa'))
+        # Then
+        mock_init.assert_called_once()

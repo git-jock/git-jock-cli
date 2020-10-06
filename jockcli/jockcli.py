@@ -22,5 +22,12 @@ def pull(repositories):
     git.pull()
 
 
+@jock_cli.command()
+@click.argument('repositories', type=str, nargs=-1)
+def fetch(repositories):
+    git = Git(repositories)
+    git.fetch()
+
+
 if __name__ == '__main__':
     jock_cli()
