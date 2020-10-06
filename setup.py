@@ -6,7 +6,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='git-jock',
-    version='1.0.0b1',
+    version='1.0.0b2',
     author='Gavin Fenton',
     author_email='contact@gavinfenton.com',
     description='Git helper for multi-repository management',
