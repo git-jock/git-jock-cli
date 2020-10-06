@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from jockcli.utils import get_repository_name
+from jock.utils import get_repository_name
 
 
 class TestUtils(TestCase):

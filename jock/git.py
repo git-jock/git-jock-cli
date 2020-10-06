@@ -2,7 +2,7 @@ import subprocess
 
 import click
 
-from jockcli.utils import get_repository_name
+from jock.utils import get_repository_name
 
 
 class Git(object):

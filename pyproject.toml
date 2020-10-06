@@ -1,6 +1,6 @@
 [project]
 name = "jock"
-version = "1.0b2"
+version = "1.0.0b3"
 description = "Group and manage multiple git repositories"
 authors = [
     "Gavin Fenton <contact@gavinfenton.com>"

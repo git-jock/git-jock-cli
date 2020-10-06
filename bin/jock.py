@@ -4,11 +4,11 @@ import sys
 
 if os.environ.get('LC_CTYPE', '') == 'UTF-8':
     os.environ['LC_CTYPE'] = 'en_US.UTF-8'
-import jockcli.jockcli
+import jock.cli
 
 
 def main():
-    return jockcli.jockcli.jock_cli()
+    return jock.cli.main()
 
 
 if __name__ == '__main__':
