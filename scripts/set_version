@@ -61,7 +61,7 @@ if release_func is None:
     sys.exit(1)
 
 release_version = release_func()
-print('New release: ' + release_version)
+print(release_version)
 
 
 def replace_version_in_file(file_path, find, replace):
