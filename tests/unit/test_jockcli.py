@@ -11,7 +11,7 @@ class TestJockCLI(TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
-    @patch('jock.jock.Git')
+    @patch('jock.cli.Git')
     def test_clone_git_init(self, git_mock):
         # Given
         repository_addresses = (
@@ -32,7 +32,7 @@ class TestJockCLI(TestCase):
         # Then
         mock_init.assert_called_once()
 
-    @patch('jock.jock.Git')
+    @patch('jock.cli.Git')
     def test_pull_git_init(self, git_mock):
         # Given
         repository_names = (
@@ -53,7 +53,7 @@ class TestJockCLI(TestCase):
         # Then
         mock_init.assert_called_once()
 
-    @patch('jock.jock.Git')
+    @patch('jock.cli.Git')
     def test_fetch_git_init(self, git_mock):
         # Given
         repository_names = (
