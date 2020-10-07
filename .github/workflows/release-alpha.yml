@@ -9,7 +9,7 @@ jobs:
   release-alpha:
     if: |
       (github.event.action == 'labelled' && github.event.label.name == 'bug') ||
-      (github.event.action == 'push' && contains(github.event.commits[0].message, '[alpha]'))
+      (github.event.action == 'push' && github.event.commits[0] && contains(github.event.commits[0].message, '[alpha]'))
     name: Release Alpha
     runs-on: ubuntu-latest
 
@@ -19,6 +19,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: Print action
+        run: |
+          echo ${{ github.event.action }}
 #      - name: Install pep517
 #        run: >-
 #          python -m
