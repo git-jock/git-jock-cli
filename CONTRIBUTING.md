@@ -71,7 +71,8 @@ guidelines at this stage.
 * Released to TestPyPI
 
 ### Alpha Releases `0.0.0aX`
-* Releases on specific PRs with the `alpha` label or commits with the `alpha` tag
+* Releases on specific PRs with the `alpha` label or commits with `[alpha]` in the message
+  * Note: `[alpha]` must be the most recent commit in a push for this
 * May be used to test before release or PR
 * Label/tag is only trusted from maintainers
 * Alpha code **should not be trusted** as it may be external or buggy
