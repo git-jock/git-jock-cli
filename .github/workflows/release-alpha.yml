@@ -9,7 +9,7 @@ jobs:
   release-alpha:
     if: |
       (github.event.action == 'labelled' && github.event.label.name == 'bug') ||
-      (github.event.action == 'push' && (github.event.commits[0].message, '[alpha]'))
+      (github.event.action == 'push' && contains(github.event.commits[0].message, '[alpha]'))
     name: Release Alpha
     runs-on: ubuntu-latest
 
