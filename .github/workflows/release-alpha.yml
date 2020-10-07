@@ -15,9 +15,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Print event
-        run: |
-          echo ${{ fromJson(github.event }}
       - name: Print action
         run: |
           echo ${{ github.event.action }}
