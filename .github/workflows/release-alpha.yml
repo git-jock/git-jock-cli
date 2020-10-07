@@ -8,20 +8,23 @@ on:
 jobs:
   release-alpha:
     if: |
-      (github.event.action == 'labelled' && github.event.label.name == 'bug') ||
-      (github.event.action == 'push' && github.event.commits[0] && contains(github.event.commits[0].message, '[alpha]'))
+      (github.event.action == 'labelled' && github.event.label.name == 'alpha') ||
+      (github.event.action == 'push' && github.event.push.commits[0] && contains(github.event.push.commits[0].message, '[alpha]'))
     name: Release Alpha
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
+      - name: Print event
+        run: |
+          echo ${{ fromJson(github.event }}
       - name: Print action
         run: |
           echo ${{ github.event.action }}
+#      - name: Set up Python 3.9
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.9
 #      - name: Install pep517
 #        run: >-
 #          python -m
