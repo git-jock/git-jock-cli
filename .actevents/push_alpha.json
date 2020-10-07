@@ -1,10 +1,7 @@
 {
-  "action": "push",
-  "push": {
-    "commits": [
-      {
-        "message": "something something something something something [alpha]"
-      }
-    ]
-  }
+  "commits": [
+    {
+      "message": "something something something something something [alpha]"
+    }
+  ]
 }

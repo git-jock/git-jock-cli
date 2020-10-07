@@ -9,7 +9,7 @@ jobs:
   release-alpha:
     if: |
       (github.event.action == 'labelled' && github.event.label.name == 'alpha') ||
-      (github.event.push.commits[0] && contains(github.event.push.commits[0].message, '[alpha]'))
+      (github.event.commits && contains(github.event.commits[0].message, '[alpha]'))
     name: Release Alpha
     runs-on: ubuntu-latest
 
@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Print action
         run: |
-          echo ${{ github.event.push.commits[0].message }}
+          echo ${{ github.event.commits[0].message }}
 #      - name: Set up Python 3.9
 #        uses: actions/setup-python@v2
 #        with:
