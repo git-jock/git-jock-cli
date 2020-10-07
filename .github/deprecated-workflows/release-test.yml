@@ -1,25 +1,19 @@
-name: Release Alpha
-
-on:
-  push:
-    tags: [ alpha ]
-  pull_request:
-    types: [ labelled ]
-
-jobs:
-  release-alpha:
-    if: |
-      (github.event.action == 'labelled' && github.event.label.name == 'bug') ||
-      (github.event.action == 'push' && github.event.tag.name == 'alpha')
-    name: Release Alpha
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
+#name: Test Release
+#
+##on: [push]
+#on: []
+#
+#jobs:
+#  test-release:
+#    name: Test Release
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Set up Python 3.9
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.9
 #      - name: Install pep517
 #        run: >-
 #          python -m
