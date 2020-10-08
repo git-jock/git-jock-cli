@@ -23,7 +23,7 @@ jobs:
         if: github.event.action == 'labeled'
         run: |
           git fetch
-          git checkout ${{ github.head_ref }}
+          git checkout ${{ github.event.pull_request.head.label }}
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
