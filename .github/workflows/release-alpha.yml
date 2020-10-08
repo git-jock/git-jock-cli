@@ -22,7 +22,7 @@ jobs:
       - name: Switch to branch
         if: github.event.action == 'labeled'
         run: |
-          git remote set-url origin ${{ github.event.pull_request.head.repo.git_url }}
+          git remote set-url origin ${{ github.event.pull_request.base.repo.ssh_url }}
           git fetch
           git checkout ${{ github.head_ref }}
       - name: Set up Python 3.9
