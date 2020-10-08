@@ -31,16 +31,18 @@ Currently it only documents branches and releases.
 ## Branches
 
 ### `main`
-The main development branch. This is the default branch that should be branched from, and the target of any PRs.
+The main development branch. This is the default branch that should be branched from, and the target for enhancements.
 
 ### `release`
 Holds the code released, for the latest released Major version.
 
+Bug fix branches may be branched from here to avoid merge issues with prerelease code coming from `main`.
+
 No manual commits go into `release`, they will all be through automated tasks for releasing.
 
 ### Others
-The only other branches will be development branch. At a stage where there is a second major release, a second release
-branch will be created so that bug fixes can be applied to both major versions.
+The only other branches will be development branches. At a stage where there is a second major release, a second release
+branch may be created so that bug fixes can be applied to both major versions.
 
 ## Releases
 
@@ -74,6 +76,7 @@ guidelines at this stage.
 * Releases on specific PRs with the `alpha` label or commits with `[alpha]` in the message
   * Note: `[alpha]` must be the most recent commit in a push for this
 * May be used to test before release or PR
+  * Tests may also be skipped or failing
 * Label/tag is only trusted from maintainers
 * Alpha code **should not be trusted** as it may be external or buggy
 * Released to TestPyPI
