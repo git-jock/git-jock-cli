@@ -18,6 +18,7 @@ jobs:
       - name: Switch to branch
         if: github.event.action == 'labeled'
         run: |
+          git fetch
           git checkout ${{ github.head_ref }}
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
