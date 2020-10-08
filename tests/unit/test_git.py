@@ -2,7 +2,7 @@ import subprocess
 from unittest import TestCase
 from unittest.mock import call, patch
 
-from jockcli.git import Git
+from jock.git import Git
 
 
 class TestGit(TestCase):

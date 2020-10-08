@@ -18,7 +18,7 @@ git commands across them all.
 This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to 
 changes.
 
-### 1.0
+### 0.1
 
 Basic git command functionality using list of repo addresses or directories.
 
@@ -29,7 +29,7 @@ e.g. `jock clone git@github.com:some-owner/repo-1.git ... git@github.com:some-ot
   - `push` 	:arrow_left: :poodle:
   - `checkout` (inc. `-b` :herb:)
   
-### 1.1
+### 0.2
 
 Stored repository settings and groups.
 
@@ -57,7 +57,7 @@ Commands could be grouped without stating individual repositories
 
 `jock -g=services checkout -b update-shared-entities-version`
 
-### 1.2 +
+### 0.3 +
 
 - Filtering on branch names
 - Terminal sessions
