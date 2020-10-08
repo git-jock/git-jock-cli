@@ -3,12 +3,12 @@ name: Release Alpha
 on:
   push:
   pull_request:
-    types: [ labelled ]
+    types: [ labeled ]
 
 jobs:
   release-alpha:
     if: |
-      (github.event.action == 'labelled' && github.event.label.name == 'alpha') ||
+      (github.event.action == 'labeled' && github.event.pull_request.labels.*.name == 'alpha') ||
       (github.event.commits && contains(github.event.commits[0].message, '[alpha]'))
     name: Release Alpha
     runs-on: ubuntu-latest
