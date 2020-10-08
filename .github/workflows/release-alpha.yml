@@ -21,7 +21,7 @@ jobs:
           python-version: 3.9
       - name: Set version
         run: |
-          echo "::set-env name=NEW_VERSION::$(./scripts/set_version alpha)"
+          echo "NEW_VERSION=$(./scripts/set_version alpha)" >> $GITHUB_ENV
       - name: Install pep517
         run: >-
           python -m
