@@ -22,8 +22,9 @@ jobs:
       - name: Switch to branch
         if: github.event.action == 'labeled'
         run: |
+          git remote set-url origin ${{ github.event.pull_request.head.repo.git_url }}
           git fetch
-          git checkout ${{ github.event.pull_request.head.label }}
+          git checkout ${{ github.head_ref }}
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
