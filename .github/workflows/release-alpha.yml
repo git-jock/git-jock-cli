@@ -27,7 +27,7 @@ jobs:
         if: github.event.action == 'labeled'
         run: |
           git remote get-url --all origin
-          git remote set-url origin ${{ github.event.pull_request.base.repo.ssh_url }}
+          git remote set-url origin ${{ github.event.pull_request.base.repo.html_url }}
           git fetch
           git checkout ${{ github.head_ref }}
       - name: Set up Python 3.9
