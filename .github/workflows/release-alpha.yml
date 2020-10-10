@@ -15,18 +15,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
       - name: Switch to branch
         if: github.event.action == 'labeled'
         run: |
-          git remote get-url --all origin
           git remote set-url origin ${{ github.event.pull_request.head.repo.clone_url }}
           git fetch
           git checkout ${{ github.head_ref }}
