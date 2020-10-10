@@ -11,7 +11,7 @@ RELEASES = 'https://pypi.org/rss/project/git-jock/releases.xml'
 def get_current_release():
     releases_xml = subprocess.run(['curl', RELEASES], capture_output=True)
 
-    match = re.search('<title>(\\w.\\w.\\w)</title>', str(releases_xml))
+    match = re.search('<title>(\\w+.\\w+.\\w+)</title>', str(releases_xml))
     if match:
         return match.group(1)
     else:
@@ -30,9 +30,8 @@ def get_next_prerelease(prefix):
     pre_releases_xml = subprocess.run(['curl', TEST_RELEASES], capture_output=True)
     next_minor_release = get_next_minor_release()
 
-    match = re.search('<title>(' + next_minor_release + prefix + '\\w)</title>', str(pre_releases_xml))
+    match = re.search('<title>(' + next_minor_release + prefix + '\\w+)</title>', str(pre_releases_xml))
     if match:
-
         current_release = match.group(1)
         current_release_split = current_release.split(prefix)
         current_release_split[1] = str(int(current_release_split[1]) + 1)
