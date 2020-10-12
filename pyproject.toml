@@ -1,0 +1,23 @@
+[project]
+name = "jock"
+# This will be updated automatically
+version = "0.1.0a16"
+description = "Group and manage multiple git repositories"
+authors = [
+    "Gavin Fenton <contact@gavinfenton.com>"
+]
+license = "MIT"
+readme = "README.md"
+homepage = ""
+repository = ""
+documentation = ""
+
+[dependencies]
+Click = "^7.1.2"
+
+[build-system]
+requires = [
+    "setuptools >= 35.0.2",
+    "setuptools_scm >= 2.0.0, <3"
+]
+build-backend = "setuptools.build_meta"

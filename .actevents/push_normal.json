@@ -1,0 +1,8 @@
+{
+  "action": "push",
+  "commits": [
+    {
+      "message": "something [not-alpha] something"
+    }
+  ]
+}

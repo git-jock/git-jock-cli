@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+
+import re
+import subprocess
+import sys
+
+TEST_RELEASES = 'https://test.pypi.org/rss/project/git-jock/releases.xml'
+RELEASES = 'https://pypi.org/rss/project/git-jock/releases.xml'
+
+
+def get_current_release():
+    releases_xml = subprocess.run(['curl', RELEASES], capture_output=True)
+
+    match = re.search('<title>(\\w+.\\w+.\\w+)</title>', str(releases_xml))
+    if match:
+        return match.group(1)
+    else:
+        # Until a minor version is actually released
+        return '0.0.0'
+
+
+def get_next_minor_release():
+    current_release = get_current_release()
+    current_release_split = current_release.split('.')
+    current_release_split[1] = str(int(current_release_split[1]) + 1)
+    return '.'.join(current_release_split)
+
+
+def get_next_prerelease(prefix):
+    pre_releases_xml = subprocess.run(['curl', TEST_RELEASES], capture_output=True)
+    next_minor_release = get_next_minor_release()
+
+    match = re.search('<title>(' + next_minor_release + prefix + '\\w+)</title>', str(pre_releases_xml))
+    if match:
+        current_release = match.group(1)
+        current_release_split = current_release.split(prefix)
+        current_release_split[1] = str(int(current_release_split[1]) + 1)
+        return prefix.join(current_release_split)
+    else:
+        return next_minor_release + prefix + '1'
+
+
+def alpha_version():
+    return get_next_prerelease('a')
+
+
+def beta_version():
+    return get_next_prerelease('b')
+
+
+switcher = {
+    'alpha': alpha_version,
+    'beta': beta_version,
+}
+
+release_func = switcher.get(sys.argv[1])
+
+if release_func is None:
+    print('Unrecognised release')
+    sys.exit(1)
+
+release_version = release_func()
+print(release_version)
+
+
+def replace_version_in_file(file_path, find, replace):
+    with open(file_path, 'r') as file:
+        file_data = file.read()
+
+    file_data = re.sub(find, replace, file_data)
+
+    with open(file_path, 'w') as file:
+        file.write(file_data)
+
+
+replace_version_in_file('./setup.py', "version\\s*=\\s*'[\\w.]+'", "version='" + release_version + "'")
+replace_version_in_file('./pyproject.toml', 'version\\s*=\\s*"[\\w.]+"', 'version = "' + release_version + '"')
