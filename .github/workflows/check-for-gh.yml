@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Push version updates
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue list
           echo ${{ secrets.GITHUB_TOKEN }} > github-token.txt
