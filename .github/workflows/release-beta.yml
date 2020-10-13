@@ -51,7 +51,11 @@ jobs:
           git push --set-upstream origin release-$NEW_VERSION
           gh auth login --with-token $GITHUB_TOKEN
           gh pr create --fill --base $CURRENT_BRANCH
-          gh auth login --with-token $GIT_JOCK
+          echo $GIT_JOCK > git-jock.txt
+          gh auth login --with-token < git-jock.txt
+          rm git-jock.txt
           gh pr review --approve
-          gh auth login --with-token $GITHUB_TOKEN
+          echo $GITHUB_TOKEN > github-token.txt
+          gh auth login --with-token < github-token.txt
+          rm github-token.txt
           gh pr merge --squash
