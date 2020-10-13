@@ -43,6 +43,15 @@ jobs:
         run: |
           git config --global user.name 'GitHub'
           git config --global user.email 'github@users.noreply.github.com'
+          CURRENT_BRANCH=$(git branch --show-current)
+          git checkout -b release-$NEW_VERSION
           git add ./setup.py ./pyproject.toml
-          git commit -m "Released $NEW_VERSION to Test PyPI"
-          git push
+          COMMIT_MESSAGE="Released $NEW_VERSION to Test PyPI"
+          git commit -m "$COMMIT_MESSAGE"
+          git push --set-upstream origin release-$NEW_VERSION
+          gh auth login --with-token $GITHUB_TOKEN
+          gh pr create --fill --base $CURRENT_BRANCH
+          gh auth login --with-token $GIT_JOCK
+          gh pr review --approve
+          gh auth login --with-token $GITHUB_TOKEN
+          gh pr merge --squash
