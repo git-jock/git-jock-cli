@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Push version updates
         run: |
-          echo $GITHUB_TOKEN > github-token.txt
+          echo ${{ secrets.GITHUB_TOKEN }} > github-token.txt
           ls
           gh auth login --with-token < github-token.txt
           rm github-token.txt

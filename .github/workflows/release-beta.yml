@@ -49,13 +49,15 @@ jobs:
           COMMIT_MESSAGE="Released $NEW_VERSION to Test PyPI"
           git commit -m "$COMMIT_MESSAGE"
           git push --set-upstream origin release-$NEW_VERSION
-          gh auth login --with-token $GITHUB_TOKEN
+          echo ${{ secrets.GITHUB_TOKEN }} > github-token.txt
+          gh auth login --with-token < github-token.txt
+          rm github-token.txt
           gh pr create --fill --base $CURRENT_BRANCH
-          echo $GIT_JOCK > git-jock.txt
+          echo ${{ secrets.GIT_JOCK }} > git-jock.txt
           gh auth login --with-token < git-jock.txt
           rm git-jock.txt
           gh pr review --approve
-          echo $GITHUB_TOKEN > github-token.txt
+          echo ${{ secrets.GITHUB_TOKEN }} > github-token.txt
           gh auth login --with-token < github-token.txt
           rm github-token.txt
           gh pr merge --squash
