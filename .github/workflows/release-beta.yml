@@ -71,7 +71,7 @@ jobs:
       - name: Approve release PR
         uses: actions/github-script@v3
         env:
-          PULL_NUMBER: steps.create-release-pr.outputs.result
+          PULL_NUMBER: ${{ steps.create-release-pr.outputs.result }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
