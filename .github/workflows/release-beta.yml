@@ -58,21 +58,20 @@ jobs:
         with:
           github-token: ${{ secrets.GIT_JOCK }}
           script: |
-            const response = await github.request('POST /repos/{owner}/{repo}/pulls', {
+            const {data: {number}} = await github.request('POST /repos/{owner}/{repo}/pulls', {
               owner: 'GavinF17',
               repo: 'git-jock',
               head: `release-${process.env.NEW_VERSION}`,
               base: process.env.CURRENT_BRANCH,
               title: process.env.COMMIT_MESSAGE
             })
-            console.log(response)
-            const {data: {id}} = response;
-            return id
+            console.log(`Created PR ${number}`)
+            return number
           result-encoding: string
       - name: Approve release PR
         uses: actions/github-script@v3
         env:
-          PULL_NUMBER: ${{ steps.create-release-pr.outputs.result.id }}
+          PULL_NUMBER: steps.create-release-pr.outputs.result
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

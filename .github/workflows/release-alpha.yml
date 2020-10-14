@@ -2,6 +2,7 @@ name: Release Alpha
 
 on:
   push:
+    branches: [ '!main' ]
   pull_request_target:
     types: [ labeled ]
 
@@ -9,7 +10,7 @@ jobs:
   release-alpha:
     if: |
       (github.event.action == 'labeled' && github.event.label.name == 'alpha') ||
-      (github.event.commits && contains(github.event.head_commit.message, '[alpha]') && !contains(github.event.head_commit.message, '\\n'))
+      (github.event.commits && contains(github.event.head_commit.message, '[alpha]'))
     name: Release Alpha
     runs-on: ubuntu-latest
 
