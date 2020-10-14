@@ -58,13 +58,17 @@ jobs:
         with:
           github-token: ${{ secrets.GIT_JOCK }}
           script: |
-            return await github.request('POST /repos/{owner}/{repo}/pulls', {
+            const response = await github.request('POST /repos/{owner}/{repo}/pulls', {
               owner: 'GavinF17',
               repo: 'git-jock',
               head: `release-${process.env.NEW_VERSION}`,
               base: process.env.CURRENT_BRANCH,
               title: process.env.COMMIT_MESSAGE
             })
+            console.log(response)
+            const {data: {id}} = response;
+            return id
+          result-encoding: string
       - name: Approve release PR
         uses: actions/github-script@v3
         env:
@@ -72,14 +76,12 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const {data: {id}} = await github.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
+            await github.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
               owner: 'GavinF17',
               repo: 'git-jock',
               pull_number: process.env.PULL_NUMBER,
               event: 'APPROVE'
             })
-            return id
-          result-encoding: string
       - name: Merge release PR
         uses: actions/github-script@v3
         env:
