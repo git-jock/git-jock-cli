@@ -90,17 +90,19 @@ jobs:
           script: |
             let retries = 0
             const checkStatus = () => {
-              const checks = await github.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
+              console.log(`Getting check status; attempt ${retries + 1}`)
+
+              const checks = github.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
                 owner: 'GavinF17',
                 repo: 'git-jock',
                 ref: process.env.CURRENT_REF
               })
 
-              const done = checks.check_runs
+              const done = checks.data.check_runs
                 .every(run => run.conclusion === "completed" || run.conclusion === "skipped")
 
               if (done) {
-                github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
+                await github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
                   owner: 'GavinF17',
                   repo: 'git-jock',
                   pull_number: process.env.PULL_NUMBER,
@@ -108,6 +110,6 @@ jobs:
                   merge_method: 'squash'
                 })
               } else {
-                (++retries < 30) && setTimeout(checkStatus, 10000)
+                (retries++ < 30) && setTimeout(checkStatus, 10000)
               }
             }
