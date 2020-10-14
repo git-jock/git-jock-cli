@@ -89,10 +89,10 @@ jobs:
           github-token: ${{ secrets.GIT_JOCK }}
           script: |
             let retries = 0
-            const checkStatus = () => {
+            const checkStatus = async () => {
               console.log(`Getting check status; attempt ${retries + 1}`)
 
-              const checks = github.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
+              const checks = await github.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
                 owner: 'GavinF17',
                 repo: 'git-jock',
                 ref: process.env.CURRENT_REF
@@ -113,3 +113,4 @@ jobs:
                 (retries++ < 30) && setTimeout(checkStatus, 10000)
               }
             }
+            await checkStatus()
