@@ -69,12 +69,12 @@ guidelines at this stage.
 
 ### Beta Releases `0.0.0bX`
 * Releases on `develop` that haven't made it into `main` release
-* Should be stable, but still pre-release
+* Should be stable, having passed PR and tests, but still pre-release
 * Released to TestPyPI
 
 ### Alpha Releases `0.0.0aX`
 * Releases on specific PRs with the `alpha` label or commits with `[alpha]` in the message
-  * Note: `[alpha]` must be the most recent commit in a push for this
+  * Note: `[alpha]` must be in the most recent, single-line, commit message in a push event for this
 * May be used to test before release or PR
   * Tests may also be skipped or failing
 * Label/tag is only trusted from maintainers
