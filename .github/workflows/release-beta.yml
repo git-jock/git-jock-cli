@@ -100,7 +100,7 @@ jobs:
                 .every(run => run.conclusion === "completed" || run.conclusion === "skipped")
 
               if (done) {
-                await github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
+                github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
                   owner: 'GavinF17',
                   repo: 'git-jock',
                   pull_number: process.env.PULL_NUMBER,
