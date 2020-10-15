@@ -42,7 +42,7 @@ jobs:
       - name: Set version
         run: |
           echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE='Released $NEW_VERSION to Test PyPI'" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=Released $NEW_VERSION to Test PyPI" >> $GITHUB_ENV
       - name: Create release branch
         run: |
           git config --global user.name 'GitHub'
@@ -90,18 +90,9 @@ jobs:
           script: |
             let retries = 0
             const checkStatus = async () => {
-              console.log(`Getting check status; attempt ${retries + 1}`)
+              console.log(`Getting check status; attempt ${++retries}`)
 
-              const checks = await github.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
-                owner: 'GavinF17',
-                repo: 'git-jock',
-                ref: process.env.CURRENT_REF
-              })
-
-              const done = checks.data.check_runs
-                .every(run => run.conclusion === "completed" || run.conclusion === "skipped")
-
-              if (done) {
+              try {
                 await github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
                   owner: 'GavinF17',
                   repo: 'git-jock',
@@ -109,8 +100,12 @@ jobs:
                   commit_title: process.env.COMMIT_MESSAGE,
                   merge_method: 'squash'
                 })
-              } else {
-                (retries++ < 30) && setTimeout(checkStatus, 10000)
+              } catch (error) {
+                if (error.status != 405 || retries > 30) {
+                  console.error('Retries exceeded, throwing last error')
+                  throw error
+                }
+                setTimeout(checkStatus, 5000)
               }
             }
             await checkStatus()
