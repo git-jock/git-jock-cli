@@ -13,7 +13,7 @@ REPOSITORIES = 'repositories'
 @click.pass_context
 def main(ctx, repository):
     ctx.ensure_object(dict)
-    ctx.obj[REPOSITORIES] = repository
+    ctx.obj[REPOSITORIES] = tuple(map(lambda x: x.lstrip(" ="), repository))
 
 
 @main.command()

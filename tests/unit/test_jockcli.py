@@ -90,3 +90,21 @@ class TestJockCLI(TestCase):
         self.runner.invoke(main, ('--repository=sad', 'fetch'))
         # Then
         mock_init.assert_called_once()
+
+    @patch('jock.cli.Git')
+    def test_all_repository_flags_work(self, git_mock):
+        # Given
+        flagged_repository_addresses = (
+            '--repository=git@github.com:some-owner/repo-1.git',
+            '-r git@github.com:other-owner/r-e-p-o-2.git',
+            '-r=git@github.com:owner3/repo3.git'
+        )
+        expected_repository_addresses = (
+            'git@github.com:some-owner/repo-1.git',
+            'git@github.com:other-owner/r-e-p-o-2.git',
+            'git@github.com:owner3/repo3.git'
+        )
+        # When
+        self.runner.invoke(main, flagged_repository_addresses + ('clone',))
+        # Then
+        git_mock.assert_called_once_with(expected_repository_addresses)
