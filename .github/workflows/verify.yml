@@ -1,9 +1,11 @@
 name: Validate Python
 
-on: [ push, pull_request_target ]
+on: [ push, pull_request_target, workflow_dispatch ]
 
 jobs:
   validate_python:
+    if: |
+      github.event.pusher.name != 'git-jock'
     runs-on: ubuntu-latest
     strategy:
       matrix:
