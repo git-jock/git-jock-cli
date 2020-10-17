@@ -11,6 +11,7 @@ class TestJockCLI(TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
+
     @staticmethod
     def _add_repository_flag(repository):
         return '--repository=' + repository
