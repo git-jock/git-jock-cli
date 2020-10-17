@@ -6,11 +6,11 @@ Releases Coming
 :rocket:
 
 :test_tube:
-[![](https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg](https://github.com/GavinF17/git-jock/actions)
+[![Validate Python](https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg)](https://github.com/GavinF17/git-jock/actions)
 :test_tube:
 
 :closed_lock_with_key:
-[![](https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg](https://github.com/GavinF17/git-jock/actions)
+[![ShiftLeft](https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg)](https://github.com/GavinF17/git-jock/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status)](https://sonarcloud.io/dashboard?id=GavinF17_git-jock)
 :closed_lock_with_key:
 </p>
