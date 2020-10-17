@@ -17,6 +17,7 @@ Releases Coming
 <h3 align="center">
 :test_tube:
 <a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="20"></a>
+<a href="https://bestpractices.coreinfrastructure.org/projects/4345"><img src="https://bestpractices.coreinfrastructure.org/projects/4345/badge"></a>
 :test_tube:
 </h3>
 
