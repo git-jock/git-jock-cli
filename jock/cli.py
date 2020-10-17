@@ -29,7 +29,7 @@ def fetch(repositories):
     git.fetch()
 
 
-@jock_cli.command()
+@main.command()
 @click.argument('repositories', type=str, nargs=-1)
 def push(repositories):
     git = Git(repositories)
