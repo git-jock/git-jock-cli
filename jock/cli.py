@@ -3,6 +3,7 @@ import click
 from jock.git import Git
 
 REPOSITORIES = 'repositories'
+GIT_ARGS = 'git_args'
 
 
 @click.group()
@@ -35,6 +36,14 @@ def pull(ctx):
 def fetch(ctx):
     git = Git(ctx.obj[REPOSITORIES])
     git.fetch()
+
+
+@main.command()
+@click.pass_context
+@click.argument('git_args', nargs=-1, required=False)
+def add(ctx, git_args):
+    git = Git(ctx.obj[REPOSITORIES])
+    git.add(git_args)
 
 
 if __name__ == '__main__':

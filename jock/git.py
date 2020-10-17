@@ -2,8 +2,6 @@ import subprocess
 
 import click
 
-from jock.utils import get_repository_name
-
 
 class Git(object):
     def __init__(self, repositories=None):
@@ -11,20 +9,26 @@ class Git(object):
 
     def clone(self):
         for repository in self.repositories:
-            repository_path = '../' + get_repository_name(repository)
             click.echo(
-                'Cloning [{}] into [{}]'.format(repository, repository_path)
+                'Cloning [{}] in [..]'.format(repository)
             )
-            subprocess.run(['git', 'clone', repository, repository_path])
+            subprocess.run(['git', '--exec-path', '..', 'clone', repository])
 
     def pull(self):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name
             click.echo('Pulling in [{}]'.format(repository_path))
-            subprocess.run(['git', '-C', repository_path, 'pull'])
+            subprocess.run(['git', '--exec-path', repository_path, 'pull'])
 
     def fetch(self):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name
-            click.echo('Fetching from [{}]'.format(repository_path))
-            subprocess.run(['git', 'fetch', repository_path])
+            click.echo('Fetching in [{}]'.format(repository_path))
+            subprocess.run(['git', '--exec-path', repository_path, 'fetch'])
+
+    def add(self, git_args=None):
+        for repository_name in self.repositories:
+            repository_path = '../' + repository_name
+            click.echo('Adding in [{}]'.format(repository_path))
+            subprocess \
+                .run(['git', '--exec-path', repository_path, 'add', git_args])
