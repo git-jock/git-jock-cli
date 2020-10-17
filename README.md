@@ -1,5 +1,13 @@
 # Git Jock Cli
 
+Much like this image, the tool is under construction.
+
+<p align="center">
+<img src="docresrouces/jock.png" data-canonical-src="docresrouces/jock.png" height="400" alt="Jock" title="Jock"/>
+</p>
+
+<h1 align="center">:construction: :construction_worker_man: :building_construction: :construction_worker_woman: :construction:</h1>
+
 <h3 align="center">
 :rocket: 
 Releases Coming 
@@ -18,14 +26,6 @@ Releases Coming
 <a href="https://sonarcloud.io/dashboard?id=GavinF17_git-jock"><img src="https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status" alt="Quality Gate Status" height="20"></a>
 :closed_lock_with_key:
 </h3>
-
-Much like this image, the tool is under construction.
-
-<p align="center">
-<img src="docresrouces/jock.png" data-canonical-src="docresrouces/jock.png" height="400" alt="Jock" title="Jock"/>
-</p>
-
-<h1 align="center">:construction: :construction_worker_man: :building_construction: :construction_worker_woman: :construction:</h1>
 
 ## What is Jock CLI?
 
