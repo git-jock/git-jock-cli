@@ -1,23 +1,23 @@
 # Git Jock Cli
 
-<h1 align="center">
+<h3 align="center">
 :rocket: 
 Releases Coming 
 :rocket:
-</h1>
+</h3>
 
-<h1 align="center">
+<h3 align="center">
 :test_tube:
-[![Validate Python](https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg)](https://github.com/GavinF17/git-jock/actions)
+<a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="18"></a>
 :test_tube:
-</h1>
+</h3>
 
-<h1 align="center">
+<h3 align="center">
 :closed_lock_with_key:
 [![ShiftLeft](https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg)](https://github.com/GavinF17/git-jock/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status)](https://sonarcloud.io/dashboard?id=GavinF17_git-jock)
 :closed_lock_with_key:
-</h1>
+</h3>
 
 Much like this image, the tool is under construction.
 
