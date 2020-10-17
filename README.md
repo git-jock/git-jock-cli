@@ -8,14 +8,14 @@ Releases Coming
 
 <h3 align="center">
 :test_tube:
-<a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="18"></a>
+<a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="20"></a>
 :test_tube:
 </h3>
 
 <h3 align="center">
 :closed_lock_with_key:
-[![ShiftLeft](https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg)](https://github.com/GavinF17/git-jock/actions)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status)](https://sonarcloud.io/dashboard?id=GavinF17_git-jock)
+<a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg" alt="ShiftLeft" height="20"></a>
+<a href="https://sonarcloud.io/dashboard?id=GavinF17_git-jock"><img src="https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status" alt="Quality Gate Status" height="20"></a>
 :closed_lock_with_key:
 </h3>
 
