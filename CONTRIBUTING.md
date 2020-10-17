@@ -65,7 +65,9 @@ The coding standards currently consist of what is enforced in the workflows:
 Though there aren't formal standards, you should match your code style to that already present in the repository, we may
 give suggestions on how to do this at PR, or make minor edits to the code ourselves before accepting it.
 
-If you wis to have an alpha version released of your PR (see below), you can ask a maintainer to do this.
+If you wish to have an alpha version released of your PR (see below), you can ask a maintainer to do this.
+
+You can run the build steps locally using [nektos/act](https://github.com/nektos/act).
 
 ## Branches
 
