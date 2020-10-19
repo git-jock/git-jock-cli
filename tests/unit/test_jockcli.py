@@ -3,14 +3,13 @@ from unittest.mock import patch
 
 from click.testing import CliRunner
 
-from jock.git import Git
 from jock.cli import main
+from jock.git import Git
 
 
 class TestJockCLI(TestCase):
     def setUp(self):
         self.runner = CliRunner()
-
 
     @staticmethod
     def _add_repository_flag(repository):

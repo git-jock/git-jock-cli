@@ -2,39 +2,47 @@ import click
 
 from jock.git import Git
 
+REPOSITORIES = 'repositories'
+
 
 @click.group()
-def main():
-    pass
+@click.option('--repository', '-r', type=str, multiple=True,
+              help='Repository you wish to run commands on. '
+                   'Multiple repositories can be specified '
+                   'using multiple flags.')
+@click.pass_context
+def main(ctx, repository):
+    ctx.ensure_object(dict)
+    ctx.obj[REPOSITORIES] = tuple(map(lambda x: x.lstrip(" ="), repository))
 
 
 @main.command()
-@click.argument('repositories', type=str, nargs=-1)
-def clone(repositories):
-    git = Git(repositories)
+@click.pass_context
+def clone(ctx):
+    git = Git(ctx.obj[REPOSITORIES])
     git.clone()
 
 
 @main.command()
-@click.argument('repositories', type=str, nargs=-1)
-def pull(repositories):
-    git = Git(repositories)
+@click.pass_context
+def pull(ctx):
+    git = Git(ctx.obj[REPOSITORIES])
     git.pull()
 
 
 @main.command()
-@click.argument('repositories', type=str, nargs=-1)
-def fetch(repositories):
-    git = Git(repositories)
+@click.pass_context
+def fetch(ctx):
+    git = Git(ctx.obj[REPOSITORIES])
     git.fetch()
 
 
 @main.command()
-@click.argument('repositories', type=str, nargs=-1)
-def push(repositories):
-    git = Git(repositories)
+@click.pass_context
+def push(ctx):
+    git = Git(ctx.obj[REPOSITORIES])
     git.push()
 
 
 if __name__ == '__main__':
-    main()
+    main(prog_name='jock')
