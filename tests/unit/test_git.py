@@ -78,3 +78,21 @@ class TestGit(TestCase):
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
+
+    @staticmethod
+    def _get_push_call(repository_name):
+        return call(['git', 'push', '../' + repository_name])
+
+    @patch.object(subprocess, 'run')
+    def test_push_pushes_all(self, mock_run):
+        # Given
+        git = Git(self.repository_names)
+        expected_calls = map(
+            self._get_push_call,
+            self.repository_names
+        )
+        # When
+        git.push()
+        # Then
+        mock_run.assert_has_calls(expected_calls)
+        self.assertEqual(mock_run.call_count, len(self.repository_names))

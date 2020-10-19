@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+
 import jock.cli
 
 if os.environ.get('LC_CTYPE', '') == 'UTF-8':
