@@ -37,5 +37,12 @@ def fetch(ctx):
     git.fetch()
 
 
+@main.command()
+@click.pass_context
+def push(ctx):
+    git = Git(ctx.obj[REPOSITORIES])
+    git.push()
+
+
 if __name__ == '__main__':
     main(prog_name='jock')
