@@ -1,6 +1,6 @@
 name: Validate Python
 
-on: [ push, pull_request_target, workflow_dispatch ]
+on: [ push ]
 
 jobs:
   validate_python:
