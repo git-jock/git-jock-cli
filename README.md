@@ -8,26 +8,35 @@ Much like this image, the tool is under construction.
 
 <h1 align="center">:construction: :construction_worker_man: :building_construction: :construction_worker_woman: :construction:</h1>
 
-<h3 align="center">
-:rocket: 
-Releases Coming 
-:rocket:
-</h3>
 
-<h3 align="center">
-:test_tube:
-<a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="20"></a>
-<a href='https://coveralls.io/github/GavinF17/git-jock'><img src='https://coveralls.io/repos/github/GavinF17/git-jock/badge.svg' alt='Coverage Status' /></a>
-<a href="https://bestpractices.coreinfrastructure.org/projects/4345"><img src="https://bestpractices.coreinfrastructure.org/projects/4345/badge"></a>
-:test_tube:
-</h3>
+<table>
+  <tr>
+    <td>:rocket:</td>
+    <td align="center">
+      <strong>Releases Coming</strong>
+    </td>
+    <td>:rocket:</td>
+  </tr>
 
-<h3 align="center">
-:closed_lock_with_key:
-<a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg" alt="ShiftLeft" height="20"></a>
-<a href="https://sonarcloud.io/dashboard?id=GavinF17_git-jock"><img src="https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status" alt="Quality Gate Status" height="20"></a>
-:closed_lock_with_key:
-</h3>
+  <tr>
+    <td>:test_tube:</td>
+    <td align="center">
+      <a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="20"></a>
+      <a href='https://coveralls.io/github/GavinF17/git-jock'><img src='https://coveralls.io/repos/github/GavinF17/git-jock/badge.svg' alt='Coverage Status' /></a>
+      <a href="https://bestpractices.coreinfrastructure.org/projects/4345"><img src="https://bestpractices.coreinfrastructure.org/projects/4345/badge"></a>
+    </td>
+    <td>:test_tube:</td>
+  </tr>
+
+  <tr>
+    <td>:closed_lock_with_key:</td>
+    <td align="center">
+      <a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg" alt="ShiftLeft" height="20"></a>
+      <a href="https://sonarcloud.io/dashboard?id=GavinF17_git-jock"><img src="https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status" alt="Quality Gate Status" height="20"></a>
+    </td>
+    <td>:closed_lock_with_key:</td>
+  </tr>
+</table>
 
 ## What is Jock CLI?
 
