@@ -23,8 +23,7 @@ class TestGit(TestCase):
     def _get_clone_call(repository_address):
         return call([
             'git',
-            '--exec-path',
-            '..',
+            '--exec-path=..',
             'clone',
             repository_address
         ])
@@ -45,7 +44,7 @@ class TestGit(TestCase):
 
     @staticmethod
     def _get_pull_call(repository_name):
-        return call(['git', '--exec-path', '../' + repository_name, 'pull'])
+        return call(['git', '--exec-path=../' + repository_name, 'pull'])
 
     @patch.object(subprocess, 'run')
     def test_pull_pulls_all(self, mock_run):
@@ -63,7 +62,7 @@ class TestGit(TestCase):
 
     @staticmethod
     def _get_fetch_call(repository_name):
-        return call(['git', '--exec-path', '../' + repository_name, 'fetch'])
+        return call(['git', '--exec-path=../' + repository_name, 'fetch'])
 
     @patch.object(subprocess, 'run')
     def test_fetch_fetches_all(self, mock_run):
@@ -81,7 +80,7 @@ class TestGit(TestCase):
 
     @staticmethod
     def _get_push_call(repository_name):
-        return call(['git', '--exec-path', '../' + repository_name, 'push'])
+        return call(['git', '--exec-path=../' + repository_name, 'push'])
 
     @patch.object(subprocess, 'run')
     def test_push_pushes_all(self, mock_run):
