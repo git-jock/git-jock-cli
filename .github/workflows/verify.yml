@@ -31,7 +31,7 @@ jobs:
           COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
           COVERALLS_PARALLEL: true
         run: |
-          pytest --cov=.
+          pytest --cov=jock
           coveralls
   coveralls:
     name: Finish Coveralls
