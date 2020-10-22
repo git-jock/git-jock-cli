@@ -26,6 +26,12 @@ class Git(object):
             click.echo('Fetching in [{}]'.format(repository_path))
             subprocess.run(['git', '--exec-path', repository_path, 'fetch'])
 
+    def push(self):
+        for repository_name in self.repositories:
+            repository_path = '../' + repository_name
+            click.echo('Pushing in [{}]'.format(repository_path))
+            subprocess.run(['git', '--exec-path', repository_path, 'push'])
+
     def add(self, git_args=None):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name

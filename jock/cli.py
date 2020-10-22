@@ -40,6 +40,13 @@ def fetch(ctx):
 
 @main.command()
 @click.pass_context
+def push(ctx):
+    git = Git(ctx.obj[REPOSITORIES])
+    git.push()
+
+
+@main.command()
+@click.pass_context
 @click.argument('git_args', nargs=-1, required=False)
 def add(ctx, git_args):
     git = Git(ctx.obj[REPOSITORIES])
