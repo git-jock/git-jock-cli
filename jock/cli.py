@@ -19,30 +19,34 @@ def main(ctx, repository):
 
 @main.command()
 @click.pass_context
-def clone(ctx):
+@click.argument('git_args', nargs=-1, required=False)
+def clone(ctx, git_args):
     git = Git(ctx.obj[REPOSITORIES])
     git.clone()
 
 
 @main.command()
 @click.pass_context
-def pull(ctx):
+@click.argument('git_args', nargs=-1, required=False)
+def pull(ctx, git_args):
     git = Git(ctx.obj[REPOSITORIES])
-    git.pull()
+    git.pull(git_args)
 
 
 @main.command()
 @click.pass_context
-def fetch(ctx):
+@click.argument('git_args', nargs=-1, required=False)
+def fetch(ctx, git_args):
     git = Git(ctx.obj[REPOSITORIES])
-    git.fetch()
+    git.fetch(git_args)
 
 
 @main.command()
 @click.pass_context
-def push(ctx):
+@click.argument('git_args', nargs=-1, required=False)
+def push(ctx, git_args):
     git = Git(ctx.obj[REPOSITORIES])
-    git.push()
+    git.push(git_args)
 
 
 @main.command()

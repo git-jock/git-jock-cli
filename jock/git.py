@@ -12,29 +12,29 @@ class Git(object):
             click.echo(
                 'Cloning [{}] in [..]'.format(repository)
             )
-            subprocess.run(['git', '--exec-path=..', 'clone', repository])
+            subprocess.run(['git', '-C', '..', 'clone', repository])
 
-    def pull(self):
+    def pull(self, git_args=()):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name
             click.echo('Pulling in [{}]'.format(repository_path))
-            subprocess.run(['git', '--exec-path=' + repository_path, 'pull'])
+            subprocess.run(('git', '-C', repository_path, 'pull') + git_args)
 
-    def fetch(self):
+    def fetch(self, git_args=()):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name
             click.echo('Fetching in [{}]'.format(repository_path))
-            subprocess.run(['git', '--exec-path=' + repository_path, 'fetch'])
+            subprocess.run(('git', '-C', repository_path, 'fetch') + git_args)
 
-    def push(self):
+    def push(self, git_args=()):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name
             click.echo('Pushing in [{}]'.format(repository_path))
-            subprocess.run(['git', '--exec-path=' + repository_path, 'push'])
+            subprocess.run(('git', '-C', repository_path, 'push') + git_args)
 
-    def add(self, git_args=None):
+    def add(self, git_args=()):
         for repository_name in self.repositories:
             repository_path = '../' + repository_name
             click.echo('Adding in [{}]'.format(repository_path))
             subprocess \
-                .run(('git', '--exec-path=' + repository_path, 'add') + ('.',))
+                .run(('git', '-C', repository_path, 'add') + git_args)
