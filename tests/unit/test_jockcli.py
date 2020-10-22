@@ -5,22 +5,12 @@ from click.testing import CliRunner
 
 from jock.cli import main
 from jock.git import Git
+from tests.utils import map_list_with_repository_flag
 
 
 class TestJockCLI(TestCase):
     def setUp(self):
         self.runner = CliRunner()
-
-    @staticmethod
-    def _add_repository_flag(repository):
-        return '--repository=' + repository
-
-    @staticmethod
-    def _map_list_with_repository_flag(repositories):
-        return tuple(map(
-            TestJockCLI._add_repository_flag,
-            repositories
-        ))
 
     @patch('jock.cli.Git')
     def test_clone_git_init(self, git_mock):
@@ -31,7 +21,7 @@ class TestJockCLI(TestCase):
             'git@github.com:owner3/repo3.git',
         )
         flagged_repositories = \
-            self._map_list_with_repository_flag(repository_addresses)
+            map_list_with_repository_flag(repository_addresses)
         # When
         self.runner.invoke(main, flagged_repositories + ('clone',))
         # Then
@@ -54,7 +44,7 @@ class TestJockCLI(TestCase):
             'repo3'
         )
         flagged_repositories = \
-            self._map_list_with_repository_flag(repository_names)
+            map_list_with_repository_flag(repository_names)
         # When
         self.runner.invoke(main, flagged_repositories + ('pull',))
         # Then
@@ -77,7 +67,7 @@ class TestJockCLI(TestCase):
             'repo3'
         )
         flagged_repositories = \
-            self._map_list_with_repository_flag(repository_names)
+            map_list_with_repository_flag(repository_names)
         # When
         self.runner.invoke(main, flagged_repositories + ('fetch',))
         # Then
