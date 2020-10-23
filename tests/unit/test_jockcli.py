@@ -82,6 +82,52 @@ class TestJockCLI(TestCase):
         mock_init.assert_called_once()
 
     @patch('jock.cli.Git')
+    def test_push_git_init(self, git_mock):
+        # Given
+        repository_names = (
+            'repo-1',
+            'r-e-p-o-2',
+            'repo3'
+        )
+        flagged_repositories = \
+            map_list_with_repository_flag(repository_names)
+        # When
+        self.runner.invoke(main, flagged_repositories + ('push',))
+        # Then
+        git_mock.assert_called_once_with(repository_names)
+
+    @patch.object(Git, 'push')
+    def test_push_git_push(self, mock_init):
+        # Given
+        # When
+        self.runner.invoke(main, ('--repository=sad', 'push'))
+        # Then
+        mock_init.assert_called_once()
+
+    @patch('jock.cli.Git')
+    def test_add_git_init(self, git_mock):
+        # Given
+        repository_names = (
+            'repo-1',
+            'r-e-p-o-2',
+            'repo3'
+        )
+        flagged_repositories = \
+            map_list_with_repository_flag(repository_names)
+        # When
+        self.runner.invoke(main, flagged_repositories + ('add',))
+        # Then
+        git_mock.assert_called_once_with(repository_names)
+
+    @patch.object(Git, 'add')
+    def test_add_git_add(self, mock_init):
+        # Given
+        # When
+        self.runner.invoke(main, ('--repository=sad', 'add'))
+        # Then
+        mock_init.assert_called_once()
+
+    @patch('jock.cli.Git')
     def test_all_repository_flags_work(self, git_mock):
         # Given
         flagged_repository_addresses = (

@@ -23,7 +23,7 @@ class TestGit(TestCase):
     def _get_clone_call(repository_address):
         return call([
             'git',
-            '--exec-path=..',
+            '-C', '..',
             'clone',
             repository_address
         ])
@@ -44,7 +44,7 @@ class TestGit(TestCase):
 
     @staticmethod
     def _get_pull_call(repository_name):
-        return call(['git', '--exec-path=../' + repository_name, 'pull'])
+        return call(('git', '-C', '../' + repository_name, 'pull'))
 
     @patch.object(subprocess, 'run')
     def test_pull_pulls_all(self, mock_run):
@@ -62,7 +62,7 @@ class TestGit(TestCase):
 
     @staticmethod
     def _get_fetch_call(repository_name):
-        return call(['git', '--exec-path=../' + repository_name, 'fetch'])
+        return call(('git', '-C', '../' + repository_name, 'fetch'))
 
     @patch.object(subprocess, 'run')
     def test_fetch_fetches_all(self, mock_run):
@@ -80,7 +80,7 @@ class TestGit(TestCase):
 
     @staticmethod
     def _get_push_call(repository_name):
-        return call(['git', '--exec-path=../' + repository_name, 'push'])
+        return call(('git', '-C', '../' + repository_name, 'push'))
 
     @patch.object(subprocess, 'run')
     def test_push_pushes_all(self, mock_run):
@@ -92,6 +92,24 @@ class TestGit(TestCase):
         )
         # When
         git.push()
+        # Then
+        mock_run.assert_has_calls(expected_calls)
+        self.assertEqual(mock_run.call_count, len(self.repository_names))
+
+    @staticmethod
+    def _get_add_call(repository_name):
+        return call(('git', '-C', '../' + repository_name, 'add'))
+
+    @patch.object(subprocess, 'run')
+    def test_add_adds_all(self, mock_run):
+        # Given
+        git = Git(self.repository_names)
+        expected_calls = map(
+            self._get_add_call,
+            self.repository_names
+        )
+        # When
+        git.add()
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
