@@ -2,7 +2,7 @@ import subprocess
 from unittest import TestCase
 from unittest.mock import call, patch
 
-from jock.git import Git
+from jock.git import git_clone, git_pull, git_fetch, git_push, git_add
 
 
 class TestGit(TestCase):
@@ -21,23 +21,22 @@ class TestGit(TestCase):
 
     @staticmethod
     def _get_clone_call(repository_address):
-        return call([
+        return call((
             'git',
             '-C', '..',
             'clone',
             repository_address
-        ])
+        ))
 
     @patch.object(subprocess, 'run')
     def test_clone_clones_all(self, mock_run):
         # Given
-        git = Git(self.repository_addresses)
         expected_calls = map(
             self._get_clone_call,
             self.repository_addresses
         )
         # When
-        git.clone()
+        git_clone(self.repository_addresses)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_addresses))
@@ -49,13 +48,12 @@ class TestGit(TestCase):
     @patch.object(subprocess, 'run')
     def test_pull_pulls_all(self, mock_run):
         # Given
-        git = Git(self.repository_names)
         expected_calls = map(
             self._get_pull_call,
             self.repository_names
         )
         # When
-        git.pull()
+        git_pull(self.repository_names)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
@@ -67,13 +65,12 @@ class TestGit(TestCase):
     @patch.object(subprocess, 'run')
     def test_fetch_fetches_all(self, mock_run):
         # Given
-        git = Git(self.repository_names)
         expected_calls = map(
             self._get_fetch_call,
             self.repository_names
         )
         # When
-        git.fetch()
+        git_fetch(self.repository_names)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
@@ -85,13 +82,12 @@ class TestGit(TestCase):
     @patch.object(subprocess, 'run')
     def test_push_pushes_all(self, mock_run):
         # Given
-        git = Git(self.repository_names)
         expected_calls = map(
             self._get_push_call,
             self.repository_names
         )
         # When
-        git.push()
+        git_push(self.repository_names)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
@@ -103,13 +99,12 @@ class TestGit(TestCase):
     @patch.object(subprocess, 'run')
     def test_add_adds_all(self, mock_run):
         # Given
-        git = Git(self.repository_names)
         expected_calls = map(
             self._get_add_call,
             self.repository_names
         )
         # When
-        git.add()
+        git_add(self.repository_names)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))

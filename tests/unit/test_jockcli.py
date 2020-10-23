@@ -4,7 +4,6 @@ from unittest.mock import patch
 from click.testing import CliRunner
 
 from jock.cli import main
-from jock.git import Git
 from tests.utils import map_list_with_repository_flag
 
 
@@ -12,8 +11,8 @@ class TestJockCLI(TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
-    @patch('jock.cli.Git')
-    def test_clone_git_init(self, git_mock):
+    @patch('jock.cli.git_clone')
+    def test_clone_git_clone(self, git_clone):
         # Given
         repository_addresses = (
             'git@github.com:some-owner/repo-1.git',
@@ -25,18 +24,10 @@ class TestJockCLI(TestCase):
         # When
         self.runner.invoke(main, flagged_repositories + ('clone',))
         # Then
-        git_mock.assert_called_once_with(repository_addresses)
+        git_clone.assert_called_once_with(repository_addresses, ())
 
-    @patch.object(Git, 'clone')
-    def test_clone_git_clone(self, mock_init):
-        # Given
-        # When
-        self.runner.invoke(main, ('--repository=asd', 'clone'))
-        # Then
-        mock_init.assert_called_once()
-
-    @patch('jock.cli.Git')
-    def test_pull_git_init(self, git_mock):
+    @patch('jock.cli.git_pull')
+    def test_pull_git_pull(self, git_pull):
         # Given
         repository_names = (
             'repo-1',
@@ -48,18 +39,10 @@ class TestJockCLI(TestCase):
         # When
         self.runner.invoke(main, flagged_repositories + ('pull',))
         # Then
-        git_mock.assert_called_once_with(repository_names)
+        git_pull.assert_called_once_with(repository_names, ())
 
-    @patch.object(Git, 'pull')
-    def test_pull_git_pull(self, mock_init):
-        # Given
-        # When
-        self.runner.invoke(main, ('--repository=dsa', 'pull'))
-        # Then
-        mock_init.assert_called_once()
-
-    @patch('jock.cli.Git')
-    def test_fetch_git_init(self, git_mock):
+    @patch('jock.cli.git_fetch')
+    def test_fetch_git_fetch(self, git_fetch):
         # Given
         repository_names = (
             'repo-1',
@@ -71,18 +54,10 @@ class TestJockCLI(TestCase):
         # When
         self.runner.invoke(main, flagged_repositories + ('fetch',))
         # Then
-        git_mock.assert_called_once_with(repository_names)
+        git_fetch.assert_called_once_with(repository_names, ())
 
-    @patch.object(Git, 'fetch')
-    def test_fetch_git_fetch(self, mock_init):
-        # Given
-        # When
-        self.runner.invoke(main, ('--repository=sad', 'fetch'))
-        # Then
-        mock_init.assert_called_once()
-
-    @patch('jock.cli.Git')
-    def test_push_git_init(self, git_mock):
+    @patch('jock.cli.git_push')
+    def test_push_git_push(self, git_push):
         # Given
         repository_names = (
             'repo-1',
@@ -94,18 +69,10 @@ class TestJockCLI(TestCase):
         # When
         self.runner.invoke(main, flagged_repositories + ('push',))
         # Then
-        git_mock.assert_called_once_with(repository_names)
+        git_push.assert_called_once_with(repository_names, ())
 
-    @patch.object(Git, 'push')
-    def test_push_git_push(self, mock_init):
-        # Given
-        # When
-        self.runner.invoke(main, ('--repository=sad', 'push'))
-        # Then
-        mock_init.assert_called_once()
-
-    @patch('jock.cli.Git')
-    def test_add_git_init(self, git_mock):
+    @patch('jock.cli.git_add')
+    def test_add_git_add(self, mock_add):
         # Given
         repository_names = (
             'repo-1',
@@ -117,17 +84,9 @@ class TestJockCLI(TestCase):
         # When
         self.runner.invoke(main, flagged_repositories + ('add',))
         # Then
-        git_mock.assert_called_once_with(repository_names)
+        mock_add.assert_called_once_with(repository_names, ())
 
-    @patch.object(Git, 'add')
-    def test_add_git_add(self, mock_init):
-        # Given
-        # When
-        self.runner.invoke(main, ('--repository=sad', 'add'))
-        # Then
-        mock_init.assert_called_once()
-
-    @patch('jock.cli.Git')
+    @patch('jock.cli.git_clone')
     def test_all_repository_flags_work(self, git_mock):
         # Given
         flagged_repository_addresses = (
@@ -143,4 +102,4 @@ class TestJockCLI(TestCase):
         # When
         self.runner.invoke(main, flagged_repository_addresses + ('clone',))
         # Then
-        git_mock.assert_called_once_with(expected_repository_addresses)
+        git_mock.assert_called_once_with(expected_repository_addresses, ())
