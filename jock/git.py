@@ -3,6 +3,13 @@ import subprocess
 import click
 
 
+def git_common(command, repositories, git_args=()):
+    for repository_name in repositories:
+        repository_path = '../' + repository_name
+        click.echo('Pulling in [{}]'.format(repository_path))
+        subprocess.run(('git', '-C', repository_path, command) + git_args)
+
+
 def git_clone(repositories, git_args=()):
     for repository in repositories:
         click.echo(
@@ -11,30 +18,19 @@ def git_clone(repositories, git_args=()):
         subprocess.run(('git', '-C', '..', 'clone', repository) + git_args)
 
 
-def git_pull(repositories, git_args=()):
-    for repository_name in repositories:
-        repository_path = '../' + repository_name
-        click.echo('Pulling in [{}]'.format(repository_path))
-        subprocess.run(('git', '-C', repository_path, 'pull') + git_args)
+GIT_COMMANDS = {
+    'clone': lambda c, r, a: git_clone(r, a),
+    'pull': git_common,
+    'fetch': git_common,
+    'add': git_common,
+    'push': git_common,
+}
 
 
-def git_fetch(repositories, git_args=()):
-    for repository_name in repositories:
-        repository_path = '../' + repository_name
-        click.echo('Fetching in [{}]'.format(repository_path))
-        subprocess.run(('git', '-C', repository_path, 'fetch') + git_args)
+def git_command(command, repositories, git_args):
+    release_func = GIT_COMMANDS.get(command)
 
+    if release_func is None:
+        print('Unsupported command ' + command)
 
-def git_push(repositories, git_args=()):
-    for repository_name in repositories:
-        repository_path = '../' + repository_name
-        click.echo('Pushing in [{}]'.format(repository_path))
-        subprocess.run(('git', '-C', repository_path, 'push') + git_args)
-
-
-def git_add(repositories, git_args=()):
-    for repository_name in repositories:
-        repository_path = '../' + repository_name
-        click.echo('Adding in [{}]'.format(repository_path))
-        subprocess \
-            .run(('git', '-C', repository_path, 'add') + git_args)
+    release_func(command, repositories, git_args)

@@ -1,6 +1,6 @@
 import click
 
-from jock.git import git_clone, git_pull, git_fetch, git_push, git_add
+from jock.git import git_command
 
 REPOSITORIES = 'repositories'
 GIT_ARGS = 'git_args'
@@ -21,35 +21,35 @@ def main(ctx, repository):
 @click.pass_context
 @click.argument('git_args', nargs=-1, required=False)
 def clone(ctx, git_args):
-    git_clone(ctx.obj[REPOSITORIES], git_args)
+    git_command('clone', ctx.obj[REPOSITORIES], git_args)
 
 
 @main.command()
 @click.pass_context
 @click.argument('git_args', nargs=-1, required=False)
 def pull(ctx, git_args):
-    git_pull(ctx.obj[REPOSITORIES], git_args)
+    git_command('pull', ctx.obj[REPOSITORIES], git_args)
 
 
 @main.command()
 @click.pass_context
 @click.argument('git_args', nargs=-1, required=False)
 def fetch(ctx, git_args):
-    git_fetch(ctx.obj[REPOSITORIES], git_args)
+    git_command('fetch', ctx.obj[REPOSITORIES], git_args)
 
 
 @main.command()
 @click.pass_context
 @click.argument('git_args', nargs=-1, required=False)
 def push(ctx, git_args):
-    git_push(ctx.obj[REPOSITORIES], git_args)
+    git_command('push', ctx.obj[REPOSITORIES], git_args)
 
 
 @main.command()
 @click.pass_context
 @click.argument('git_args', nargs=-1, required=False)
 def add(ctx, git_args):
-    git_add(ctx.obj[REPOSITORIES], git_args)
+    git_command('add', ctx.obj[REPOSITORIES], git_args)
 
 
 if __name__ == '__main__':

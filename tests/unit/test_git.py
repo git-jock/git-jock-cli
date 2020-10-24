@@ -2,7 +2,7 @@ import subprocess
 from unittest import TestCase
 from unittest.mock import call, patch
 
-from jock.git import git_clone, git_pull, git_fetch, git_push, git_add
+from jock.git import git_command
 
 
 class TestGit(TestCase):
@@ -36,7 +36,7 @@ class TestGit(TestCase):
             self.repository_addresses
         )
         # When
-        git_clone(self.repository_addresses)
+        git_command('clone', self.repository_addresses, ())
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_addresses))
@@ -53,7 +53,7 @@ class TestGit(TestCase):
             self.repository_names
         )
         # When
-        git_pull(self.repository_names)
+        git_command('pull', self.repository_names, ())
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
@@ -70,7 +70,7 @@ class TestGit(TestCase):
             self.repository_names
         )
         # When
-        git_fetch(self.repository_names)
+        git_command('fetch', self.repository_names, ())
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
@@ -87,7 +87,7 @@ class TestGit(TestCase):
             self.repository_names
         )
         # When
-        git_push(self.repository_names)
+        git_command('push', self.repository_names, ())
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
@@ -104,7 +104,7 @@ class TestGit(TestCase):
             self.repository_names
         )
         # When
-        git_add(self.repository_names)
+        git_command('add', self.repository_names, ())
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
