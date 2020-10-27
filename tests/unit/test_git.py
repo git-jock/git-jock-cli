@@ -2,6 +2,8 @@ import subprocess
 from unittest import TestCase
 from unittest.mock import call, patch
 
+import pytest
+
 from jock.git import git_command, git_common
 
 
@@ -62,3 +64,33 @@ class TestGit(TestCase):
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(self.repository_names))
+
+    @patch.object(subprocess, 'run')
+    def test_git_command(self, mock_run):
+        # Given
+        common_command = ['pull', 'fetch', 'add', 'push', 'clone']
+        args = ('-a', '--woof')
+        repository = 'some-repo'
+        expected_calls = [
+            self._get_common_call(repository, common_command[0], args),
+            self._get_common_call(repository, common_command[1], args),
+            self._get_common_call(repository, common_command[2], args),
+            self._get_common_call(repository, common_command[3], args),
+            self._get_clone_call(repository, args)
+        ]
+        # When
+        for command in common_command:
+            git_command(command, (repository,), args)
+        # Then
+        mock_run.assert_has_calls(expected_calls)
+        self.assertEqual(mock_run.call_count, len(common_command))
+
+    def test_git_command_exits(self):
+        # Given
+        unknown_command = 'grrrr'
+        expected_exit_code = 1
+        # When
+        with pytest.raises(SystemExit) as wrapped_exit:
+            git_command(unknown_command, ('repository',), ())
+        # Then
+        self.assertEqual(expected_exit_code, wrapped_exit.value.code)
