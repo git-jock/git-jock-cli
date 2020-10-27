@@ -1,36 +1,38 @@
 import subprocess
+import sys
 
 import click
 
-from jock.utils import get_repository_name
+
+def git_common(command, repositories, git_args=()):
+    for repository_name in repositories:
+        repository_path = '../' + repository_name
+        click.echo('Executing [{}] in [{}]'.format(command, repository_path))
+        subprocess.run(('git', '-C', repository_path, command) + git_args)
 
 
-class Git(object):
-    def __init__(self, repositories=None):
-        self.repositories = repositories
+def git_clone(repositories, git_args=()):
+    for repository in repositories:
+        click.echo(
+            'Cloning [{}] in [..]'.format(repository)
+        )
+        subprocess.run(('git', '-C', '..', 'clone', repository) + git_args)
 
-    def clone(self):
-        for repository in self.repositories:
-            repository_path = '../' + get_repository_name(repository)
-            click.echo(
-                'Cloning [{}] into [{}]'.format(repository, repository_path)
-            )
-            subprocess.run(['git', 'clone', repository, repository_path])
 
-    def pull(self):
-        for repository_name in self.repositories:
-            repository_path = '../' + repository_name
-            click.echo('Pulling in [{}]'.format(repository_path))
-            subprocess.run(['git', '-C', repository_path, 'pull'])
+GIT_COMMANDS = {
+    'clone': lambda c, r, a: git_clone(r, a),
+    'pull': git_common,
+    'fetch': git_common,
+    'add': git_common,
+    'push': git_common,
+}
 
-    def fetch(self):
-        for repository_name in self.repositories:
-            repository_path = '../' + repository_name
-            click.echo('Fetching from [{}]'.format(repository_path))
-            subprocess.run(['git', 'fetch', repository_path])
 
-    def push(self):
-        for repository_name in self.repositories:
-            repository_path = '../' + repository_name
-            click.echo('Pushing to [{}]'.format(repository_path))
-            subprocess.run(['git', 'push', repository_path])
+def git_command(command, repositories, git_args):
+    release_func = GIT_COMMANDS.get(command)
+
+    if release_func is None:
+        print('Unsupported command ' + command)
+        sys.exit(1)
+
+    release_func(command, repositories, git_args)
