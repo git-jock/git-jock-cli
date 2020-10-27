@@ -68,22 +68,44 @@ class TestGit(TestCase):
     @patch.object(subprocess, 'run')
     def test_git_command(self, mock_run):
         # Given
-        common_command = ['pull', 'fetch', 'add', 'push', 'clone']
+        common_commands = [
+            'add',
+            'restore',
+            'rm',
+            'branch',
+            'commit',
+            'reset',
+            'switch',
+            'tag',
+            'fetch',
+            'pull',
+            'push',
+            'checkout',
+        ]
         args = ('-a', '--woof')
         repository = 'some-repo'
         expected_calls = [
-            self._get_common_call(repository, common_command[0], args),
-            self._get_common_call(repository, common_command[1], args),
-            self._get_common_call(repository, common_command[2], args),
-            self._get_common_call(repository, common_command[3], args),
+            self._get_common_call(repository, common_commands[0], args),
+            self._get_common_call(repository, common_commands[1], args),
+            self._get_common_call(repository, common_commands[2], args),
+            self._get_common_call(repository, common_commands[3], args),
+            self._get_common_call(repository, common_commands[4], args),
+            self._get_common_call(repository, common_commands[5], args),
+            self._get_common_call(repository, common_commands[6], args),
+            self._get_common_call(repository, common_commands[7], args),
+            self._get_common_call(repository, common_commands[8], args),
+            self._get_common_call(repository, common_commands[9], args),
+            self._get_common_call(repository, common_commands[10], args),
+            self._get_common_call(repository, common_commands[11], args),
             self._get_clone_call(repository, args)
         ]
         # When
-        for command in common_command:
+        for command in common_commands:
             git_command(command, (repository,), args)
+        git_command('clone', (repository,), args)
         # Then
         mock_run.assert_has_calls(expected_calls)
-        self.assertEqual(mock_run.call_count, len(common_command))
+        self.assertEqual(mock_run.call_count, len(expected_calls))
 
     def test_git_command_exits(self):
         # Given
