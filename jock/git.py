@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import click
 
@@ -6,7 +7,7 @@ import click
 def git_common(command, repositories, git_args=()):
     for repository_name in repositories:
         repository_path = '../' + repository_name
-        click.echo('Pulling in [{}]'.format(repository_path))
+        click.echo('Executing [{}] in [{}]'.format(command, repository_path))
         subprocess.run(('git', '-C', repository_path, command) + git_args)
 
 
@@ -32,5 +33,6 @@ def git_command(command, repositories, git_args):
 
     if release_func is None:
         print('Unsupported command ' + command)
+        sys.exit(1)
 
     release_func(command, repositories, git_args)
