@@ -21,10 +21,18 @@ def git_clone(repositories, git_args=()):
 
 GIT_COMMANDS = {
     'clone': lambda c, r, a: git_clone(r, a),
-    'pull': git_common,
-    'fetch': git_common,
     'add': git_common,
+    'restore': git_common,
+    'rm': git_common,
+    'branch': git_common,
+    'commit': git_common,
+    'reset': git_common,
+    'switch': git_common,
+    'tag': git_common,
+    'fetch': git_common,
+    'pull': git_common,
     'push': git_common,
+    'checkout': git_common,
 }
 
 
