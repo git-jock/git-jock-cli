@@ -28,8 +28,8 @@ Much like this image, the tool is under construction.
   <tr>
     <td align="center">:test_tube:</td>
     <td align="center">
-      <a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="20"></a>
-      <a href='https://coveralls.io/github/GavinF17/git-jock'><img src='https://coveralls.io/repos/github/GavinF17/git-jock/badge.svg' alt='Coverage Status' /></a>
+      <a href="https://github.com/git-jock/git-jock-cli/actions"><img src="https://github.com/git-jock/git-jock-cli/workflows/Validate%20Python/badge.svg" alt="Validate Python" height="20"></a>
+      <a href='https://coveralls.io/github/git-jock/git-jock-cli'><img src='https://coveralls.io/repos/github/git-jock/git-jock-cli/badge.svg' alt='Coverage Status' /></a>
       <a href="https://bestpractices.coreinfrastructure.org/projects/4345"><img src="https://bestpractices.coreinfrastructure.org/projects/4345/badge"></a>
     </td>
     <td align="center">:test_tube:</td>
@@ -38,8 +38,8 @@ Much like this image, the tool is under construction.
   <tr>
     <td align="center">:closed_lock_with_key:</td>
     <td align="center">
-      <a href="https://github.com/GavinF17/git-jock/actions"><img src="https://github.com/GavinF17/git-jock/workflows/ShiftLeft/badge.svg" alt="ShiftLeft" height="20"></a>
-      <a href="https://sonarcloud.io/dashboard?id=GavinF17_git-jock"><img src="https://sonarcloud.io/api/project_badges/measure?project=GavinF17_git-jock&metric=alert_status" alt="Quality Gate Status" height="20"></a>
+      <a href="https://github.com/git-jock/git-jock-cli/actions"><img src="https://github.com/git-jock/git-jock-cli/workflows/ShiftLeft/badge.svg" alt="ShiftLeft" height="20"></a>
+      <a href="https://sonarcloud.io/dashboard?id=git-jock_git-jock-cli"><img src="https://sonarcloud.io/api/project_badges/measure?project=git-jock_git-jock-cli&metric=alert_status" alt="Quality Gate Status" height="20"></a>
     </td>
     <td align="center">:closed_lock_with_key:</td>
   </tr>
@@ -100,7 +100,7 @@ Commands could be grouped without stating individual repositories
 - Terminal sessions
 - ???
 
-Feel free to suggest feature requests in the [issues](https://github.com/GavinF17/git-jock/issues).
+Feel free to suggest feature requests in the [issues](https://github.com/git-jock/git-jock-cli/issues).
 
 ## Why is it called Git Jock?
 

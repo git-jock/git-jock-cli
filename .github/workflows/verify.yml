@@ -5,7 +5,7 @@ on: [ pull_request, push ]
 jobs:
   validate_python:
     if: |
-      github.event.pusher.name != 'git-jock'
+      github.event.pusher.name != 'git-jock-bot'
     runs-on: ubuntu-latest
     strategy:
       matrix:
