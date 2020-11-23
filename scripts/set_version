@@ -74,5 +74,6 @@ def replace_version_in_file(file_path, find, replace):
         file.write(file_data)
 
 
-replace_version_in_file('./jock/__init__.py', "__version__\\s*=\\s*'[\\w.]+'", "__version__ = '" + release_version + "'")
+replace_version_in_file('./jock/__init__.py', "__version__\\s*=\\s*'[\\w.]+'",
+                        "__version__ = '" + release_version + "'")
 replace_version_in_file('./pyproject.toml', 'version\\s*=\\s*"[\\w.]+"', 'version = "' + release_version + '"')

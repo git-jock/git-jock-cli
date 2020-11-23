@@ -1,5 +1,5 @@
 import click
-
+from jock import __version__
 from jock.git import git_command
 
 REPOSITORIES = 'repositories'
@@ -8,6 +8,7 @@ CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
 
 
 @click.group()
+@click.version_option(__version__)
 @click.option('--repository', '-r', type=str, multiple=True,
               help='Repository you wish to run commands on. '
                    'Multiple repositories can be specified '
