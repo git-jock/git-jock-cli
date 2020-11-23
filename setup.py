@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from setuptools import setup, find_packages
+from jock import __version__
 
 with open('README.md', 'r') as fh:
     long_description = fh.read()
@@ -7,7 +8,7 @@ with open('README.md', 'r') as fh:
 setup(
     name='git-jock',
     # This will be updated automatically
-    version='0.1.0b27',
+    version=__version__,
     author='Gavin Fenton',
     author_email='contact@gavinfenton.com',
     description='Git helper for multi-repository management',
