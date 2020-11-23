@@ -3,13 +3,13 @@ Git Jock is open to contributions, through feature requests, issue reporting, pu
 would improve the tool.
 
 This document sets out the most common instructions on how to contribute, however if something isn't clear feel free to
-reach out via an [issue](https://github.com/GavinF17/git-jock/issues).
+reach out via an [issue](https://github.com/git-jock/git-jock-cli/issues).
 
 ## Issues & Feature Requests
 Even if you don't have the time or knowledge to enhance the tool by contributing code, you can enable other to using
 GitHub Issues. In order to do this in the most effective way please follow these steps.
 
-You can see the [current issues here](https://github.com/GavinF17/git-jock/issues). 
+You can see the [current issues here](https://github.com/git-jock/git-jock-cli/issues). 
 
 1. First, ensure that you have an up to date version and that the issue or feature isn't already there.
 1. Check to see if someone else has already reported the issue or requested the same (or a similar) feature.
