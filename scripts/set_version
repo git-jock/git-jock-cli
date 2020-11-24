@@ -49,8 +49,9 @@ def beta_version():
 
 
 switcher = {
-    'alpha': alpha_version,
-    'beta': beta_version,
+    'alpha': lambda: get_next_prerelease('a'),
+    'beta': lambda: get_next_prerelease('b'),
+    'minor': get_next_minor_release
 }
 
 release_func = switcher.get(sys.argv[1])
@@ -73,5 +74,6 @@ def replace_version_in_file(file_path, find, replace):
         file.write(file_data)
 
 
-replace_version_in_file('./setup.py', "version\\s*=\\s*'[\\w.]+'", "version='" + release_version + "'")
+replace_version_in_file('./jock/__init__.py', "__version__\\s*=\\s*'[\\w.]+'",
+                        "__version__ = '" + release_version + "'")
 replace_version_in_file('./pyproject.toml', 'version\\s*=\\s*"[\\w.]+"', 'version = "' + release_version + '"')
