@@ -20,7 +20,7 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
     - name: NextGen Static Analysis
-      run: ${GITHUB_WORKSPACE}/sl analyze --wait --app git-jock --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --python $(pwd)
+      run: ${GITHUB_WORKSPACE}/sl analyze --wait --app git-jock-cli --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --python $(pwd)
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
@@ -34,7 +34,7 @@ jobs:
 #      run: |
 #        curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
 #    - name: Validate Build Rules
-#      run: ${GITHUB_WORKSPACE}/sl check-analysis --app git-jock \
+#      run: ${GITHUB_WORKSPACE}/sl check-analysis --app git-jock-cli \
 #           --source 'tag.branch=${{ github.event.pull_request.base.ref }}' \
 #           --target "tag.branch=${{ github.head_ref || steps.extract_branch.outputs.branch }}" \
 #           --report \
