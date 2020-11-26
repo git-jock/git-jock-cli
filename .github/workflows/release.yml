@@ -65,8 +65,8 @@ jobs:
           github-token: ${{ secrets.GIT_JOCK }}
           script: |
             const {data: {number}} = await github.request('POST /repos/{owner}/{repo}/pulls', {
-              owner: 'GavinF17',
-              repo: 'git-jock',
+              owner: 'git-jock',
+              repo: 'git-jock-cli',
               head: `release-${process.env.NEW_VERSION}`,
               base: process.env.CURRENT_BRANCH,
               title: process.env.COMMIT_MESSAGE
@@ -82,8 +82,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             await github.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
-              owner: 'GavinF17',
-              repo: 'git-jock',
+              owner: 'git-jock',
+              repo: 'git-jock-cli',
               pull_number: process.env.PULL_NUMBER,
               event: 'APPROVE'
             })
@@ -100,8 +100,8 @@ jobs:
 
               try {
                 await github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
-                  owner: 'GavinF17',
-                  repo: 'git-jock',
+                  owner: 'git-jock',
+                  repo: 'git-jock-cli',
                   pull_number: process.env.PULL_NUMBER,
                   commit_title: process.env.COMMIT_MESSAGE,
                   merge_method: 'squash'
@@ -116,21 +116,22 @@ jobs:
             }
             await checkStatus()
 
-  create-release:
-    name: Create Release
-    needs: pypi-release
-    runs-on: ubuntu-latest
-    steps:
+      - name: Checkout release branch
+        run: |
+          git checkout release
+          git tag v${{ env.NEW_VERSION }}
+          git push --tags
+          git fetch
+          git checkout v${{ env.NEW_VERSION }}
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          tag_name: v${{ env.NEW_VERSION }}
+          release_name: Release v${{ env.NEW_VERSION }}
 
       - name: Store Upload URL
         run: |
@@ -158,12 +159,12 @@ jobs:
         with:
           python-version: 3.7
 
-      - name: Clone git-jock
-        run: git clone https://github.com/GavinF17/git-jock.git
+      - name: Clone git-jock-cli
+        run: git clone https://github.com/git-jock/git-jock-cli.git
 
-      - name: Install git-jock dependencies
+      - name: Install git-jock-cli dependencies
         run: |
-          cd git-jock
+          cd git-jock-cli
           pip install -r requirements.txt
 
       - name: Install PyInstaller
@@ -171,7 +172,7 @@ jobs:
 
       - name: Run PyInstaller
         run: |
-          cd git-jock
+          cd git-jock-cli
           pyinstaller jock/__main__.py --onefile --name jock
 
       - name: Download upload_url
@@ -195,7 +196,7 @@ jobs:
           echo $UPLOAD_URL
 
       - name: Zip
-        run: zip -j $ZIP_NAME git-jock/dist/jock
+        run: zip -j $ZIP_NAME git-jock-cli/dist/jock
 
       - name: Upload Release Asset
         id: upload-release-asset
