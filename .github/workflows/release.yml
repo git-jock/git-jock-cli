@@ -67,7 +67,7 @@ jobs:
               owner: 'git-jock',
               repo: 'git-jock-cli',
               head: `release-${process.env.NEW_VERSION}`,
-              base: process.env.CURRENT_BRANCH,
+              base: release,
               title: process.env.COMMIT_MESSAGE
             })
             console.log(`Created PR ${number}`)
@@ -117,6 +117,7 @@ jobs:
 
       - name: Checkout release branch
         run: |
+          git fetch
           git checkout release
           git tag v${{ env.NEW_VERSION }}
           git push --tags
