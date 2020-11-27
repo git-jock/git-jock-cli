@@ -1,7 +1,7 @@
 [project]
 name = "jock"
 # This will be updated automatically
-version = "0.2.0b2"
+version = "0.2.0b3"
 description = "Group and manage multiple git repositories"
 authors = [
     "Gavin Fenton <contact@gavinfenton.com>"
