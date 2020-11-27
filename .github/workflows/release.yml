@@ -44,7 +44,6 @@ jobs:
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.pypi_password }}
-          repository_url: https://pypi.org/legacy/
       - name: Set version
         run: |
           echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV
