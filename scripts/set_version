@@ -10,7 +10,6 @@ RELEASES = 'https://pypi.org/rss/project/git-jock/releases.xml'
 
 def get_current_release():
     releases_xml = subprocess.run(['curl', RELEASES], capture_output=True)
-
     match = re.search('<title>(\\w+.\\w+.\\w+)</title>', str(releases_xml))
     if match:
         return match.group(1)
@@ -19,10 +18,27 @@ def get_current_release():
         return '0.0.0'
 
 
+def get_next_major_release():
+    current_release = get_current_release()
+    current_release_split = current_release.split('.')
+    current_release_split[1] = str(int(current_release_split[1]) + 1)
+    current_release_split[2] = '0'
+    current_release_split[3] = '0'
+    return '.'.join(current_release_split)
+
+
 def get_next_minor_release():
     current_release = get_current_release()
     current_release_split = current_release.split('.')
     current_release_split[1] = str(int(current_release_split[1]) + 1)
+    current_release_split[2] = '0'
+    return '.'.join(current_release_split)
+
+
+def get_next_patch_release():
+    current_release = get_current_release()
+    current_release_split = current_release.split('.')
+    current_release_split[2] = str(int(current_release_split[2]) + 1)
     return '.'.join(current_release_split)
 
 
@@ -51,6 +67,7 @@ def beta_version():
 switcher = {
     'alpha': lambda: get_next_prerelease('a'),
     'beta': lambda: get_next_prerelease('b'),
+    'patch': get_next_patch_release,
     'minor': get_next_minor_release
 }
 
@@ -76,4 +93,5 @@ def replace_version_in_file(file_path, find, replace):
 
 replace_version_in_file('./jock/__init__.py', "__version__\\s*=\\s*'[\\w.]+'",
                         "__version__ = '" + release_version + "'")
+replace_version_in_file('./setup.py', "version\\s*=\\s*'[\\w.]+'", "version='" + release_version + "'")
 replace_version_in_file('./pyproject.toml', 'version\\s*=\\s*"[\\w.]+"', 'version = "' + release_version + '"')
