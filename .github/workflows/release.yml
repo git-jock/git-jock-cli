@@ -67,7 +67,7 @@ jobs:
               owner: 'git-jock',
               repo: 'git-jock-cli',
               head: `release-${process.env.NEW_VERSION}`,
-              base: release,
+              base: 'release',
               title: process.env.COMMIT_MESSAGE
             })
             console.log(`Created PR ${number}`)
