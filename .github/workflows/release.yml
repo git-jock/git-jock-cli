@@ -147,7 +147,7 @@ jobs:
 
   release-matrix:
     name: Release Matrix
-    needs: create-release
+    needs: pypi-release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
