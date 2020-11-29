@@ -20,7 +20,8 @@ Much like this image, the tool is under construction.
   <tr>
     <td align="center">:rocket:</td>
     <td align="center">
-      Releases Coming
+      <a href="https://github.com/git-jock/git-jock-cli/releases/latest"><img src="https://img.shields.io/github/v/release/git-jock/git-jock-cli?label=GH%20Release&logo=github" alt="GitHub Release" height="20"></a>
+      <a href="https://github.com/git-jock/git-jock-cli/releases/latest"><img src="https://img.shields.io/pypi/v/git-jock?logo=python&label=PyPi" alt="PyPi" height="20"></a>
     </td>
     <td align="center">:rocket:</td>
   </tr>
