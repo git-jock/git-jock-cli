@@ -62,6 +62,9 @@ The coding standards currently consist of what is enforced in the workflows:
     maintainer.
 - ShiftLeft and SonarCloud will run SAST scans on the code when a PR is opened.
 
+You should also include a [CHANGELOG](https://github.com/git-jock/git-jock-cli/blob/main/CHANGELOG.md) entry under the 
+Unreleased section if there are any noticeable changes for a user, e.g. a new feature or a bugfix with a notable impact.
+
 Though there aren't formal standards, you should match your code style to that already present in the repository, we may
 give suggestions on how to do this at PR, or make minor edits to the code ourselves before accepting it.
 

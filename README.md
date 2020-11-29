@@ -20,7 +20,8 @@ Much like this image, the tool is under construction.
   <tr>
     <td align="center">:rocket:</td>
     <td align="center">
-      Releases Coming
+      <a href="https://github.com/git-jock/git-jock-cli/releases/latest"><img src="https://img.shields.io/github/v/release/git-jock/git-jock-cli?label=GH%20Release&logo=github" alt="GitHub Release" height="20"></a>
+      <a href="https://pypi.org/project/git-jock/"><img src="https://img.shields.io/pypi/v/git-jock?logo=python&label=PyPI" alt="PyPi" height="20"></a>
     </td>
     <td align="center">:rocket:</td>
   </tr>
@@ -60,21 +61,39 @@ curl -s -L https://raw.githubusercontent.com/git-jock/git-jock-cli/main/scripts/
 :warning: _Note this script uses sudo to move the binary to `/usr/local/bin` and you should check the script before 
 execution._
 
+## Usage
+
+```
+Usage: jock [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --version              Show the version and exit.
+  -r, --repository TEXT  Repository you wish to run commands on. Multiple
+                         repositories can be specified using multiple flags.
+
+  --help                 Show this message and exit.
+
+Commands:
+  add branch checkout clone commit fetch pull push reset restore rm switch
+```
+- OPTIONS can be `--version`, `--help` or a list of repositories such as `-r git-jock-cli` or `--repository 
+some-service`
+- COMMAND is any of the currently supported git commands: `add`, `branch`, `checkout`, `clone`, `commit`, `fetch`, 
+`pull`, `push`, `reset`, `restore`, `rm`, `switch`, or `tag`
+- ARGS are git arguments passed directly to the git command
+
+Until grouping is supported (see the roadmap below), you can save your repo groups using environment variables in your
+.bashrc file, e.g: 
+```shell script
+export SERVICES="--repository auth-service --repository user-service"
+```
+Then you can run your commands as `jock $(echo $SERVICES) checkout main`
+
+
 ## Roadmap
 
 This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to 
 changes.
-
-### 0.1
-
-Basic git command functionality using list of repo addresses or directories.
-
-e.g. `jock -r git@github.com:some-owner/repo-1.git ... -r git@github.com:some-other-owner/repo-42.git clone`
-  - `clone` :sheep: :sheep:
-  - `fetch` :softball: :dog2: :dash:
-  - `pull` :no_good_woman: :flat_shoe: :service_dog:
-  - `push` 	:arrow_left: :poodle:
-  - `checkout` (inc. `-b` :herb:)
   
 ### 0.2
 
