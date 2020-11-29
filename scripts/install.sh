@@ -14,8 +14,8 @@ rm -r "$TMP_UNZIP"
 mkdir "$TMP_UNZIP"
 unzip "$TMP_ZIP" -d "$TMP_UNZIP"
 
-echo "Moving jock to /usr/bin (note this requires sudo and you should check the script before running!)"
-sudo mv "$TMP_UNZIP/jock" /usr/bin/
+echo "Moving jock to /usr/local/bin/ (note this requires sudo and you should check the script before running!)"
+sudo mv "$TMP_UNZIP/jock" /usr/local/bin/
 
 echo "Removing tmp files"
 rm "$TMP_ZIP"

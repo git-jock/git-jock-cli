@@ -55,7 +55,7 @@ git commands across them all.
 To install on Linux or MacOS you can download from [releases](https://github.com/git-jock/git-jock-cli/releases/latest) 
 or run:
 ```bash
-curl -s https://raw.githubusercontent.com/git-jock/git-jock-cli/main/scripts/install.sh | sudo bash
+curl -s -L https://raw.githubusercontent.com/git-jock/git-jock-cli/main/scripts/install.sh | bash
 ```
 
 ## Roadmap
