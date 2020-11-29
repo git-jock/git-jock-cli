@@ -50,6 +50,14 @@ Much like this image, the tool is under construction.
 The CLI is intended to make dealing with multiple connected repositories easier, by grouping repositories and running 
 git commands across them all.
 
+## Install
+
+To install on Linux or MacOS you can download from [releases](https://github.com/git-jock/git-jock-cli/releases/latest) 
+or run:
+```bash
+curl -s https://raw.githubusercontent.com/git-jock/git-jock-cli/main/scripts/install.sh | sudo bash
+```
+
 ## Roadmap
 
 This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to 
