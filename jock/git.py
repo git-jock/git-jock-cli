@@ -4,15 +4,16 @@ import sys
 import click
 
 
-def git_common(command, repositories, git_args=()):
-    for repository_name in repositories:
-        repository_path = '../' + repository_name
+def git_common(command, config_repositories, selected_repositories, git_args=()):
+    for repository_name in selected_repositories:
+        repository_path = config_repositories[repository_name]['location']
         click.echo('Executing [{}] in [{}]'.format(command, repository_path))
+        print(('git', '-C', repository_path, command) + git_args)
         subprocess.run(('git', '-C', repository_path, command) + git_args)
 
 
-def git_clone(repositories, git_args=()):
-    for repository in repositories:
+def git_clone(config_repositories, selected_repositories, git_args=()):
+    for repository in selected_repositories:
         click.echo(
             'Cloning [{}] in [..]'.format(repository)
         )
@@ -20,7 +21,7 @@ def git_clone(repositories, git_args=()):
 
 
 GIT_COMMANDS = {
-    'clone': lambda c, r, a: git_clone(r, a),
+    'clone': lambda _, cr, sr, a: git_clone(cr, sr, a),
     'add': git_common,
     'restore': git_common,
     'rm': git_common,
@@ -36,11 +37,11 @@ GIT_COMMANDS = {
 }
 
 
-def git_command(command, repositories, git_args):
+def git_command(command, config_repositories, selected_repositories, git_args):
     release_func = GIT_COMMANDS.get(command)
 
     if release_func is None:
         print('Unsupported command ' + command)
         sys.exit(1)
 
-    release_func(command, repositories, git_args)
+    release_func(command, config_repositories, selected_repositories, git_args)
