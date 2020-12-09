@@ -10,15 +10,13 @@ except ImportError:
 
 
 def load_repositories():
-    home = os.environ.get('HOME')
-
-    file_path = home + '/.jockrc'
-    with open(file_path, 'r') as file:
+    with open(os.path.expanduser('~/.jockrc'), 'r') as file:
         config = yaml.load(file, Loader=Loader)
-        # print(config)
-
         return config['repositories']
 
-        # if repositories is not None:
-        #     for repo in repositories:
-        #         print(repo['name'])
+
+def get_repository_path(path):
+    expanded = os.path.expanduser(path)
+    if not os.path.isabs(expanded):
+        expanded = os.path.expanduser('~/' + path)
+    return expanded
