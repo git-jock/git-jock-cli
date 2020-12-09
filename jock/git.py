@@ -21,7 +21,7 @@ def git_clone(config_repositories, selected_repositories, git_args=()):
         click.echo(
             'Cloning [{}] in [{}]'.format(repository_name, repository_path)
         )
-        subprocess.run(('git', '-C', '..', 'clone', config_repository['address'], repository_path) + git_args)
+        subprocess.run(('git', 'clone', config_repository['address'], repository_path) + git_args)
 
 
 GIT_COMMANDS = {

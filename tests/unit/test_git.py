@@ -6,64 +6,75 @@ import pytest
 
 from jock.git import git_command, git_common
 
+REPOSITORY_NAMES = (
+    'repo-1',
+    'r-e-p-o-2',
+    'repo3',
+)
+
+CONFIG_REPOSITORIES = dict({
+    REPOSITORY_NAMES[0]: dict({
+        'address': 'git@github.com:some-owner/repo-1.git',
+        'location': 'git/repo-1',
+    }),
+    REPOSITORY_NAMES[1]: dict({
+        'address': 'git@github.com:other-owner/r-e-p-o-2.git',
+        'location': '~/git/r-e-p-o-2',
+    }),
+    REPOSITORY_NAMES[2]: dict({
+        'address': 'git@github.com:owner3/repo3.git',
+        'location': '/usr/jock/git/repo3',
+    }),
+})
+
 
 class TestGit(TestCase):
-    def setUp(self):
-        self.repository_addresses = (
-            'git@github.com:some-owner/repo-1.git',
-            'git@github.com:other-owner/r-e-p-o-2.git',
-            'git@github.com:owner3/repo3.git'
-        )
-
-        self.repository_names = (
-            'repo-1',
-            'r-e-p-o-2',
-            'repo3'
-        )
-
     @staticmethod
-    def _get_clone_call(repository_address, git_args=()):
+    def _get_clone_call(name, git_args=()):
+        repository = CONFIG_REPOSITORIES[name]
         return call((
                         'git',
-                        '-C', '..',
                         'clone',
-                        repository_address
+                        repository['address'],
+                        repository['location']
                     ) + git_args)
 
+    # @patch('jock.git.get_repository_path') # TODO: Mock
     @patch.object(subprocess, 'run')
     def test_clone_clones_all(self, mock_run):
         # Given
         args = ('--scary', '--bork')
         expected_calls = [
-            self._get_clone_call(self.repository_addresses[0], args),
-            self._get_clone_call(self.repository_addresses[1], args),
-            self._get_clone_call(self.repository_addresses[2], args)
+            self._get_clone_call(REPOSITORY_NAMES[0], args),
+            self._get_clone_call(REPOSITORY_NAMES[1], args),
+            self._get_clone_call(REPOSITORY_NAMES[2], args)
         ]
         # When
-        git_command('clone', self.repository_addresses, args)
+        git_command('clone', CONFIG_REPOSITORIES, REPOSITORY_NAMES, args)
         # Then
         mock_run.assert_has_calls(expected_calls)
-        self.assertEqual(mock_run.call_count, len(self.repository_addresses))
+        self.assertEqual(mock_run.call_count, len(REPOSITORY_NAMES))
 
     @staticmethod
     def _get_common_call(repository_name, command, git_args=()):
         return call(('git', '-C', '../' + repository_name, command) + git_args)
 
+    @patch('jock.git.get_repository_path')
     @patch.object(subprocess, 'run')
-    def test_common_call(self, mock_run):
+    def test_common_call(self, mock_run, mock_get_repository_path):
         # Given
         command = 'bark'
         args = ('-a', '--woof')
         expected_calls = [
-            self._get_common_call(self.repository_names[0], command, args),
-            self._get_common_call(self.repository_names[1], command, args),
-            self._get_common_call(self.repository_names[2], command, args)
+            self._get_common_call(REPOSITORY_NAMES[0], command, args),
+            self._get_common_call(REPOSITORY_NAMES[1], command, args),
+            self._get_common_call(REPOSITORY_NAMES[2], command, args)
         ]
         # When
-        git_common(command, self.repository_names, args)
+        git_common(command, CONFIG_REPOSITORIES, REPOSITORY_NAMES, args)
         # Then
         mock_run.assert_has_calls(expected_calls)
-        self.assertEqual(mock_run.call_count, len(self.repository_names))
+        self.assertEqual(mock_run.call_count, len(REPOSITORY_NAMES))
 
     @patch.object(subprocess, 'run')
     def test_git_command(self, mock_run):
