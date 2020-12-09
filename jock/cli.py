@@ -21,7 +21,7 @@ CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
 def main(ctx, repository):
     ctx.ensure_object(dict)
     ctx.obj[CONFIG_REPOSITORIES] = load_repositories()
-    ctx.obj[SELECTED_REPOSITORIES] = repository
+    ctx.obj[SELECTED_REPOSITORIES] = tuple(map(lambda x: x.lstrip(" ="), repository))
 
 
 @main.command(context_settings=CONTEXT_SETTINGS)
