@@ -1,10 +1,9 @@
-
 import subprocess
 import sys
 
 import click
 
-from jock.config import get_repository_path
+from jock.utils import get_repository_path
 
 
 def git_common(command, config_repositories, selected_repositories, git_args=()):
