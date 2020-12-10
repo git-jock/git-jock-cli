@@ -5,69 +5,64 @@ from unittest.mock import call, patch
 import pytest
 
 from jock.git import git_command, git_common
+from tests.utils import CONFIG_REPOSITORIES, REPOSITORY_NAMES
 
 
 class TestGit(TestCase):
-    def setUp(self):
-        self.repository_addresses = (
-            'git@github.com:some-owner/repo-1.git',
-            'git@github.com:other-owner/r-e-p-o-2.git',
-            'git@github.com:owner3/repo3.git'
-        )
-
-        self.repository_names = (
-            'repo-1',
-            'r-e-p-o-2',
-            'repo3'
-        )
-
     @staticmethod
-    def _get_clone_call(repository_address, git_args=()):
+    def _get_clone_call(name, git_args=()):
+        repository = CONFIG_REPOSITORIES[name]
         return call((
                         'git',
-                        '-C', '..',
                         'clone',
-                        repository_address
+                        repository['address'],
+                        repository['location']
                     ) + git_args)
 
+    @patch('jock.git.get_repository_path')
     @patch.object(subprocess, 'run')
-    def test_clone_clones_all(self, mock_run):
+    def test_clone_clones_all(self, mock_run, mock_get_repository_path):
         # Given
+        mock_get_repository_path.side_effect = lambda r: r
         args = ('--scary', '--bork')
         expected_calls = [
-            self._get_clone_call(self.repository_addresses[0], args),
-            self._get_clone_call(self.repository_addresses[1], args),
-            self._get_clone_call(self.repository_addresses[2], args)
+            self._get_clone_call(REPOSITORY_NAMES[0], args),
+            self._get_clone_call(REPOSITORY_NAMES[1], args),
+            self._get_clone_call(REPOSITORY_NAMES[2], args)
         ]
         # When
-        git_command('clone', self.repository_addresses, args)
+        git_command('clone', CONFIG_REPOSITORIES, REPOSITORY_NAMES, args)
         # Then
         mock_run.assert_has_calls(expected_calls)
-        self.assertEqual(mock_run.call_count, len(self.repository_addresses))
+        self.assertEqual(mock_run.call_count, len(REPOSITORY_NAMES))
 
     @staticmethod
     def _get_common_call(repository_name, command, git_args=()):
-        return call(('git', '-C', '../' + repository_name, command) + git_args)
+        return call(('git', '-C', CONFIG_REPOSITORIES[repository_name]['location'], command) + git_args)
 
+    @patch('jock.git.get_repository_path')
     @patch.object(subprocess, 'run')
-    def test_common_call(self, mock_run):
+    def test_common_call(self, mock_run, mock_get_repository_path):
         # Given
+        mock_get_repository_path.side_effect = lambda r: r
         command = 'bark'
         args = ('-a', '--woof')
         expected_calls = [
-            self._get_common_call(self.repository_names[0], command, args),
-            self._get_common_call(self.repository_names[1], command, args),
-            self._get_common_call(self.repository_names[2], command, args)
+            self._get_common_call(REPOSITORY_NAMES[0], command, args),
+            self._get_common_call(REPOSITORY_NAMES[1], command, args),
+            self._get_common_call(REPOSITORY_NAMES[2], command, args)
         ]
         # When
-        git_common(command, self.repository_names, args)
+        git_common(command, CONFIG_REPOSITORIES, REPOSITORY_NAMES, args)
         # Then
         mock_run.assert_has_calls(expected_calls)
-        self.assertEqual(mock_run.call_count, len(self.repository_names))
+        self.assertEqual(mock_run.call_count, len(REPOSITORY_NAMES))
 
+    @patch('jock.git.get_repository_path')
     @patch.object(subprocess, 'run')
-    def test_git_command(self, mock_run):
+    def test_git_command(self, mock_run, mock_get_repository_path):
         # Given
+        mock_get_repository_path.side_effect = lambda r: r
         common_commands = [
             'add',
             'restore',
@@ -83,26 +78,26 @@ class TestGit(TestCase):
             'checkout',
         ]
         args = ('-a', '--woof')
-        repository = 'some-repo'
+        repository_name = REPOSITORY_NAMES[0]
         expected_calls = [
-            self._get_common_call(repository, common_commands[0], args),
-            self._get_common_call(repository, common_commands[1], args),
-            self._get_common_call(repository, common_commands[2], args),
-            self._get_common_call(repository, common_commands[3], args),
-            self._get_common_call(repository, common_commands[4], args),
-            self._get_common_call(repository, common_commands[5], args),
-            self._get_common_call(repository, common_commands[6], args),
-            self._get_common_call(repository, common_commands[7], args),
-            self._get_common_call(repository, common_commands[8], args),
-            self._get_common_call(repository, common_commands[9], args),
-            self._get_common_call(repository, common_commands[10], args),
-            self._get_common_call(repository, common_commands[11], args),
-            self._get_clone_call(repository, args)
+            self._get_common_call(repository_name, common_commands[0], args),
+            self._get_common_call(repository_name, common_commands[1], args),
+            self._get_common_call(repository_name, common_commands[2], args),
+            self._get_common_call(repository_name, common_commands[3], args),
+            self._get_common_call(repository_name, common_commands[4], args),
+            self._get_common_call(repository_name, common_commands[5], args),
+            self._get_common_call(repository_name, common_commands[6], args),
+            self._get_common_call(repository_name, common_commands[7], args),
+            self._get_common_call(repository_name, common_commands[8], args),
+            self._get_common_call(repository_name, common_commands[9], args),
+            self._get_common_call(repository_name, common_commands[10], args),
+            self._get_common_call(repository_name, common_commands[11], args),
+            self._get_clone_call(repository_name, args)
         ]
         # When
         for command in common_commands:
-            git_command(command, (repository,), args)
-        git_command('clone', (repository,), args)
+            git_command(command, CONFIG_REPOSITORIES, (repository_name,), args)
+        git_command('clone', CONFIG_REPOSITORIES, (repository_name,), args)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(expected_calls))
@@ -113,6 +108,6 @@ class TestGit(TestCase):
         expected_exit_code = 1
         # When
         with pytest.raises(SystemExit) as wrapped_exit:
-            git_command(unknown_command, ('repository',), ())
+            git_command(unknown_command, CONFIG_REPOSITORIES, ('repository',), ())
         # Then
         self.assertEqual(expected_exit_code, wrapped_exit.value.code)
