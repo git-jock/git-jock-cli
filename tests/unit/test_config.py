@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import yaml
 
-from jock.config import load_repositories
+from jock.config import load_config
 from tests.utils import CONFIG_REPOSITORIES
 
 CONFIG = dict({'repositories': CONFIG_REPOSITORIES})
@@ -22,6 +22,6 @@ class TestConfig(TestCase):
         mock_expanduser.return_value = '/some/path'
         mock_yaml.return_value = CONFIG
         # When
-        actual_repositories = load_repositories()
+        actual_repositories = load_config()
         # Then
         self.assertEqual(CONFIG_REPOSITORIES, actual_repositories)

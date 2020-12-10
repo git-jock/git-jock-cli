@@ -1,7 +1,7 @@
 import click
 
 from jock import __version__
-from jock.config import load_repositories
+from jock.config import get_selected_repositories
 from jock.git import git_command
 
 CONFIG_REPOSITORIES = 'config_repositories'
@@ -17,10 +17,15 @@ CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
                    'you wish to run commands on. Multiple '
                    'repositories can be specified using '
                    'multiple flags.')
+@click.option('--group', '-g', type=str, multiple=True,
+              help='Group of repositories, specified in '
+                   '~/.jockrc, you wish to run commands on.'
+                   'Multiple  groups can be specified using '
+                   'multiple flags.')
 @click.pass_context
-def main(ctx, repository):
+def main(ctx, repository, group):
     ctx.ensure_object(dict)
-    ctx.obj[CONFIG_REPOSITORIES] = load_repositories()
+    ctx.obj[CONFIG_REPOSITORIES] = get_selected_repositories(repository, group)
     ctx.obj[SELECTED_REPOSITORIES] = tuple(map(lambda x: x.lstrip(" ="), repository))
 
 
