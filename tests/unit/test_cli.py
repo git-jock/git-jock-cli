@@ -4,19 +4,7 @@ from unittest.mock import call, patch
 from click.testing import CliRunner
 
 from jock.cli import main
-from tests.utils import map_list_with_repository_flag
-
-REPOSITORY_NAMES = (
-    'repo-1',
-    'r-e-p-o-2',
-    'repo3',
-)
-
-CONFIG_REPOSITORIES = dict({
-    REPOSITORY_NAMES[0]: dict({}),
-    REPOSITORY_NAMES[1]: dict({}),
-    REPOSITORY_NAMES[2]: dict({}),
-})
+from tests.utils import map_list_with_repository_flag, CONFIG_REPOSITORIES, REPOSITORY_NAMES
 
 
 class TestCLI(TestCase):

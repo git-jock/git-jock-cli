@@ -5,27 +5,7 @@ from unittest.mock import call, patch
 import pytest
 
 from jock.git import git_command, git_common
-
-REPOSITORY_NAMES = (
-    'repo-1',
-    'r-e-p-o-2',
-    'repo3',
-)
-
-CONFIG_REPOSITORIES = dict({
-    REPOSITORY_NAMES[0]: dict({
-        'address': 'git@github.com:some-owner/repo-1.git',
-        'location': 'git/repo-1',
-    }),
-    REPOSITORY_NAMES[1]: dict({
-        'address': 'git@github.com:other-owner/r-e-p-o-2.git',
-        'location': '~/git/r-e-p-o-2',
-    }),
-    REPOSITORY_NAMES[2]: dict({
-        'address': 'git@github.com:owner3/repo3.git',
-        'location': '/home/jock/git/repo3',
-    }),
-})
+from tests.utils import CONFIG_REPOSITORIES, REPOSITORY_NAMES
 
 
 class TestGit(TestCase):
