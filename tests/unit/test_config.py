@@ -13,15 +13,19 @@ open_name = '%s.open' % __name__
 
 
 class TestConfig(TestCase):
-    @patch("builtins.open", read_data="data")
+    @patch('builtins.open', read_data='data')
     @patch.object(yaml, 'load')
     @patch.object(os.path, 'expanduser')
-    def test_load_repositories(self, mock_expanduser, mock_yaml, mock_open):
+    def test_load_config(self, mock_expanduser, mock_yaml, mock_open):
         # Given
         expected_rc_path = '~/.jockrc'
-        mock_expanduser.return_value = '/some/path'
+        expected_expanded_path = '/some/path'
+        mock_expanduser.return_value = expected_expanded_path
         mock_yaml.return_value = CONFIG
         # When
-        actual_repositories = load_config()
+        actual_config = load_config()
         # Then
-        self.assertEqual(CONFIG_REPOSITORIES, actual_repositories)
+        mock_expanduser.assert_called_once_with(expected_rc_path)
+        mock_open.assert_called_once_with(expected_expanded_path, 'r')
+        mock_yaml.assert_called_once()
+        self.assertEqual(CONFIG, actual_config)
