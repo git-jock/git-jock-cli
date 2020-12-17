@@ -20,7 +20,8 @@ Much like this image, the tool is under construction.
   <tr>
     <td align="center">:rocket:</td>
     <td align="center">
-      Releases Coming
+      <a href="https://github.com/git-jock/git-jock-cli/releases/latest"><img src="https://img.shields.io/github/v/release/git-jock/git-jock-cli?label=GH%20Release&logo=github" alt="GitHub Release" height="20"></a>
+      <a href="https://pypi.org/project/git-jock/"><img src="https://img.shields.io/pypi/v/git-jock?logo=python&label=PyPI" alt="PyPi" height="20"></a>
     </td>
     <td align="center">:rocket:</td>
   </tr>
@@ -50,39 +51,34 @@ Much like this image, the tool is under construction.
 The CLI is intended to make dealing with multiple connected repositories easier, by grouping repositories and running 
 git commands across them all.
 
-## Roadmap
+## Install
 
-This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to 
-changes.
+To install or update on Linux or MacOS, you can download from 
+[releases](https://github.com/git-jock/git-jock-cli/releases/latest) or run:
+```bash
+curl -s -L https://raw.githubusercontent.com/git-jock/git-jock-cli/main/scripts/install.sh | bash
+```
+:warning: _Note this script uses sudo to move the binary to `/usr/local/bin` and you should check the script before 
+execution._
 
-### 0.1
+## Usage
 
-Basic git command functionality using list of repo addresses or directories.
+### Configuration
 
-e.g. `jock -r git@github.com:some-owner/repo-1.git ... -r git@github.com:some-other-owner/repo-42.git clone`
-  - `clone` :sheep: :sheep:
-  - `fetch` :softball: :dog2: :dash:
-  - `pull` :no_good_woman: :flat_shoe: :service_dog:
-  - `push` 	:arrow_left: :poodle:
-  - `checkout` (inc. `-b` :herb:)
-  
-### 0.2
+Repositories and groups must be configured in `~/.jockrc`, in YAML format like below
 
-Stored repository settings and groups.
-
-e.g. with a config of
 ```yaml
 repositories:
-  - name: auth-service
+  auth-service:
     address: git@github.com:some-startup/authentication-service.git
-    directory: ../authentication-service
-  - name: shared-entities
+    location: /home/jock/git/authentication-service
+  shared-entities:
     address: git@github.com:some-startup/shared-entities.git
-    directory: ../shared-entities
-  - ...
-  - name: user-service
+    location: ~/shared-entities
+  ...
+  user-service:
     address: git@github.com:some-startup/user-service.git
-    directory: ../users
+    location: ../users
 
 groups:
   - name: services
@@ -90,9 +86,41 @@ groups:
       - auth-service
       - user-service
 ```
-Commands could be grouped without stating individual repositories
 
-`jock -g=services checkout -b update-shared-entities-version`
+- `address` is the remote git address
+- `location` is the local location, can be relative to home or absolute
+
+### CLI Usage
+
+```
+Usage: jock [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --version              Show the version and exit.
+  -r, --repository TEXT  Repository, specified in ~/.jockrc, you wish to run
+                         commands on. Multiple repositories can be specified
+                         using multiple flags.
+
+  -g, --group TEXT       Group of repositories, specified in ~/.jockrc, you
+                         wish to run commands on.Multiple  groups can be
+                         specified using multiple flags.
+
+  --help                 Show this message and exit.
+
+Commands:
+  add branch checkout clone commit fetch pull push reset restore rm switch
+```
+- OPTIONS can be `--version`, `--help` or a list of repositories such as `-r git-jock-cli` or `--repository 
+some-service`
+- COMMAND is any of the currently supported git commands: `add`, `branch`, `checkout`, `clone`, `commit`, `fetch`, 
+`pull`, `push`, `reset`, `restore`, `rm`, `switch`, or `tag`
+- ARGS are git arguments passed directly to the git command
+
+
+## Roadmap
+
+This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to 
+changes.
 
 ### 0.3 +
 
