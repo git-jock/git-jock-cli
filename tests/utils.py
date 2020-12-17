@@ -15,6 +15,12 @@ REPOSITORY_NAMES = (
     'repo3',
 )
 
+GROUP_NAMES = (
+    'oneandtwo',
+    'oneandthree',
+    'three',
+)
+
 CONFIG_REPOSITORIES = dict({
     REPOSITORY_NAMES[0]: dict({
         'address': 'git@github.com:some-owner/repo-1.git',
@@ -28,4 +34,10 @@ CONFIG_REPOSITORIES = dict({
         'address': 'git@github.com:owner3/repo3.git',
         'location': '/home/jock/git/repo3',
     }),
+})
+
+CONFIG_GROUPS = dict({
+    GROUP_NAMES[0]: {'repositories': [REPOSITORY_NAMES[0], REPOSITORY_NAMES[1]]},
+    GROUP_NAMES[1]: {'repositories': [REPOSITORY_NAMES[0], REPOSITORY_NAMES[2]]},
+    GROUP_NAMES[2]: {'repositories': [REPOSITORY_NAMES[2]]},
 })

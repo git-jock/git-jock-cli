@@ -31,7 +31,7 @@ class TestGit(TestCase):
             self._get_clone_call(REPOSITORY_NAMES[2], args)
         ]
         # When
-        git_command('clone', CONFIG_REPOSITORIES, REPOSITORY_NAMES, args)
+        git_command('clone', CONFIG_REPOSITORIES, args)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(REPOSITORY_NAMES))
@@ -53,7 +53,7 @@ class TestGit(TestCase):
             self._get_common_call(REPOSITORY_NAMES[2], command, args)
         ]
         # When
-        git_common(command, CONFIG_REPOSITORIES, REPOSITORY_NAMES, args)
+        git_common(command, CONFIG_REPOSITORIES, args)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(REPOSITORY_NAMES))
@@ -79,6 +79,7 @@ class TestGit(TestCase):
         ]
         args = ('-a', '--woof')
         repository_name = REPOSITORY_NAMES[0]
+        selected_repositories = dict({repository_name: CONFIG_REPOSITORIES[repository_name]})
         expected_calls = [
             self._get_common_call(repository_name, common_commands[0], args),
             self._get_common_call(repository_name, common_commands[1], args),
@@ -96,8 +97,8 @@ class TestGit(TestCase):
         ]
         # When
         for command in common_commands:
-            git_command(command, CONFIG_REPOSITORIES, (repository_name,), args)
-        git_command('clone', CONFIG_REPOSITORIES, (repository_name,), args)
+            git_command(command, selected_repositories, args)
+        git_command('clone', selected_repositories, args)
         # Then
         mock_run.assert_has_calls(expected_calls)
         self.assertEqual(mock_run.call_count, len(expected_calls))
@@ -108,6 +109,6 @@ class TestGit(TestCase):
         expected_exit_code = 1
         # When
         with pytest.raises(SystemExit) as wrapped_exit:
-            git_command(unknown_command, CONFIG_REPOSITORIES, ('repository',), ())
+            git_command(unknown_command, CONFIG_REPOSITORIES, ())
         # Then
         self.assertEqual(expected_exit_code, wrapped_exit.value.code)

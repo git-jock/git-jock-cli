@@ -12,11 +12,11 @@ class TestCLI(TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
-    @patch('jock.cli.load_repositories')
+    @patch('jock.cli.get_selected_repositories')
     @patch('jock.cli.git_command')
-    def test_git_commands(self, git_command, load_repositories_mock):
+    def test_git_commands(self, git_command, get_selected_repositories_mock):
         # Given
-        load_repositories_mock.return_value = CONFIG_REPOSITORIES
+        get_selected_repositories_mock.return_value = CONFIG_REPOSITORIES
         commands = [
             'clone',
             'add',
@@ -35,19 +35,19 @@ class TestCLI(TestCase):
 
         args = ('-a', '--woof')
         expected_calls = [
-            call(commands[0], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[1], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[2], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[3], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[4], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[5], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[6], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[7], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[8], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[9], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[10], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[11], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
-            call(commands[12], CONFIG_REPOSITORIES, REPOSITORY_NAMES, args),
+            call(commands[0], CONFIG_REPOSITORIES, args),
+            call(commands[1], CONFIG_REPOSITORIES, args),
+            call(commands[2], CONFIG_REPOSITORIES, args),
+            call(commands[3], CONFIG_REPOSITORIES, args),
+            call(commands[4], CONFIG_REPOSITORIES, args),
+            call(commands[5], CONFIG_REPOSITORIES, args),
+            call(commands[6], CONFIG_REPOSITORIES, args),
+            call(commands[7], CONFIG_REPOSITORIES, args),
+            call(commands[8], CONFIG_REPOSITORIES, args),
+            call(commands[9], CONFIG_REPOSITORIES, args),
+            call(commands[10], CONFIG_REPOSITORIES, args),
+            call(commands[11], CONFIG_REPOSITORIES, args),
+            call(commands[12], CONFIG_REPOSITORIES, args),
         ]
         flagged_repositories = \
             map_list_with_repository_flag(REPOSITORY_NAMES)
@@ -59,11 +59,11 @@ class TestCLI(TestCase):
         git_command.assert_has_calls(expected_calls)
         self.assertEqual(git_command.call_count, len(expected_calls))
 
-    @patch('jock.cli.load_repositories')
+    @patch('jock.cli.get_selected_repositories')
     @patch('jock.cli.git_command')
-    def test_all_repository_flags_work(self, git_mock, load_repositories_mock):
+    def test_all_repository_flags_work(self, git_mock, get_selected_repositories_mock):
         # Given
-        load_repositories_mock.return_value = CONFIG_REPOSITORIES
+        get_selected_repositories_mock.return_value = CONFIG_REPOSITORIES
         flagged_repository_names = (
             '--repository=' + REPOSITORY_NAMES[0],
             '-r ' + REPOSITORY_NAMES[1],
@@ -72,4 +72,4 @@ class TestCLI(TestCase):
         # When
         self.runner.invoke(main, flagged_repository_names + ('clone',))
         # Then
-        git_mock.assert_called_once_with('clone', CONFIG_REPOSITORIES, REPOSITORY_NAMES, ())
+        git_mock.assert_called_once_with('clone', CONFIG_REPOSITORIES, ())

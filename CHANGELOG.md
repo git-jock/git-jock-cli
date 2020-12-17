@@ -9,6 +9,16 @@ Note, "non-notable" changes may be small patches with no noticeable effect to th
 ## Unreleased
 
 
+## 0.2.0 2020-12-17
+### Added
+- Configuration file
+    - `~/.jockrc` stores repositories and groups for commands to be run on (YAML formatted)
+    - `--group` can be used to refer to groups of repositories (same usage as repositories)
+  
+### Changed
+- `--respository` now refers to repository stored in `.jockrc`, previously looked at adjacent directories
+
+
 ## 0.1.0 2020-11-27
 ### Added
 - Initial usage: `jock [OPTIONS] COMMAND [ARGS]`
