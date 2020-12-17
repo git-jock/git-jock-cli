@@ -18,15 +18,12 @@ def get_selected_repositories(selected_repositories, selected_groups):
     config = load_config()
 
     repositories = dict({})
-    print(selected_repositories)
-    print(selected_groups)
     config_repositories = config['repositories']
     for repo_name in selected_repositories:
         repositories[repo_name] = config_repositories[repo_name]
 
     if config.get('groups') is not None:
         config_groups = config['groups']
-        print(config_groups)
         for group_name in selected_groups:
             for repo_name in config_groups[group_name]['repositories']:
                 repositories[repo_name] = config_repositories[repo_name]

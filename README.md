@@ -63,13 +63,47 @@ execution._
 
 ## Usage
 
+### Configuration
+
+Repositories and groups must be configured in `~/.jockrc`, in YAML format like below
+
+```yaml
+repositories:
+  auth-service:
+    address: git@github.com:some-startup/authentication-service.git
+    location: /home/jock/git/authentication-service
+  shared-entities:
+    address: git@github.com:some-startup/shared-entities.git
+    location: ~/shared-entities
+  ...
+  user-service:
+    address: git@github.com:some-startup/user-service.git
+    location: ../users
+
+groups:
+  - name: services
+    repositories:
+      - auth-service
+      - user-service
+```
+
+- `address` is the remote git address
+- `location` is the local location, can be relative to home or absolute
+
+### CLI Usage
+
 ```
 Usage: jock [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --version              Show the version and exit.
-  -r, --repository TEXT  Repository you wish to run commands on. Multiple
-                         repositories can be specified using multiple flags.
+  -r, --repository TEXT  Repository, specified in ~/.jockrc, you wish to run
+                         commands on. Multiple repositories can be specified
+                         using multiple flags.
+
+  -g, --group TEXT       Group of repositories, specified in ~/.jockrc, you
+                         wish to run commands on.Multiple  groups can be
+                         specified using multiple flags.
 
   --help                 Show this message and exit.
 
@@ -82,46 +116,11 @@ some-service`
 `pull`, `push`, `reset`, `restore`, `rm`, `switch`, or `tag`
 - ARGS are git arguments passed directly to the git command
 
-Until grouping is supported (see the roadmap below), you can save your repo groups using environment variables in your
-.bashrc file, e.g: 
-```shell script
-export SERVICES="--repository auth-service --repository user-service"
-```
-Then you can run your commands as `jock $(echo $SERVICES) checkout main`
-
 
 ## Roadmap
 
 This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to 
 changes.
-  
-### 0.2
-
-Stored repository settings and groups.
-
-e.g. with a config of
-```yaml
-repositories:
-  - name: auth-service
-    address: git@github.com:some-startup/authentication-service.git
-    directory: ../authentication-service
-  - name: shared-entities
-    address: git@github.com:some-startup/shared-entities.git
-    directory: ../shared-entities
-  - ...
-  - name: user-service
-    address: git@github.com:some-startup/user-service.git
-    directory: ../users
-
-groups:
-  - name: services
-    repositories:
-      - auth-service
-      - user-service
-```
-Commands could be grouped without stating individual repositories
-
-`jock -g=services checkout -b update-shared-entities-version`
 
 ### 0.3 +
 
