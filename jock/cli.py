@@ -1,7 +1,7 @@
 import click
 
 from jock import __version__
-from jock.config import get_selected_repositories
+from jock.config import get_selected_repositories, import_config
 from jock.git import git_command
 
 CONFIG_REPOSITORIES = 'config_repositories'
@@ -12,7 +12,7 @@ CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
 
 def import_it(ctx, a):
     if a:
-        print('need to import')
+        import_config()
         ctx.exit()
 
 
