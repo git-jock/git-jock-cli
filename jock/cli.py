@@ -10,6 +10,12 @@ GIT_ARGS = 'git_args'
 CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
 
 
+def import_it(ctx, a):
+    if a:
+        print('need to import')
+        ctx.exit()
+
+
 @click.group()
 @click.version_option(__version__)
 @click.option('--repository', '-r', type=str, multiple=True,
@@ -22,8 +28,10 @@ CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
                    '~/.jockrc, you wish to run commands on.'
                    'Multiple  groups can be specified using '
                    'multiple flags.')
+@click.option('--import-config', '-i', is_flag=True, callback=import_it,
+              help='Import (or reimport) remote configs.')
 @click.pass_context
-def main(ctx, repository, group):
+def main(ctx, repository, group, import_config):
     ctx.ensure_object(dict)
 
     repositories = tuple(map(lambda x: x.lstrip(" ="), repository))
