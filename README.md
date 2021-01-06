@@ -81,7 +81,7 @@ repositories:
     location: ../users
 
 groups:
-  - name: services
+  services:
     repositories:
       - auth-service
       - user-service
