@@ -1,0 +1,8 @@
+GIT = 'git'
+COMMAND_PATH = '-C'
+IMPORTS = 'imports'
+DATA = 'data'
+REPOSITORIES = 'repositories'
+GROUPS = 'groups'
+LOCATION = 'location'
+ADDRESS = 'address'

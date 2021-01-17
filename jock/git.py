@@ -3,11 +3,8 @@ import sys
 
 import click
 
-from jock.config import ADDRESS, LOCATION
+from jock.constant import ADDRESS, LOCATION, GIT, COMMAND_PATH
 from jock.utils import get_repository_path
-
-GIT = 'git'
-COMMAND_PATH = '-C'
 
 
 def git_common(command, selected_repositories, git_args=()):
