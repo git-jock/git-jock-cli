@@ -52,6 +52,6 @@ jobs:
         run: |
           git config --global user.name 'GitHub'
           git config --global user.email 'github@users.noreply.github.com'
-          git add ./setup.py ./pyproject.toml
+          git add ./setup.py ./pyproject.toml ./jock/__init__.py
           git commit -m "Released $NEW_VERSION to Test PyPI"
           git push
