@@ -1,6 +1,7 @@
-import os
 import subprocess
 import sys
+import tempfile
+from os import path
 
 import yaml
 
@@ -11,13 +12,10 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
-# TODO: get sys temp
-TMP_IMPORT_DIR = '/tmp/jock-imports/'
-
 
 def load_config():
     try:
-        with open(os.path.expanduser('~/.jockrc'), 'r') as file:
+        with open(path.expanduser('~/.jockrc'), 'r') as file:
             config = yaml.load(file, Loader=Loader)
             validate_config(config)
             return config
@@ -55,15 +53,35 @@ def merge_config_and_import_key(config, key):
     return merged
 
 
+def get_tmp_path():
+    return path.join(tempfile.gettempdir(), 'jock-imports')
+
+
+def fetch_remote_rc(import_name, address):
+    temp_dir = get_tmp_path()
+    temp_path = path.join(temp_dir, import_name)
+
+    subprocess_steps(
+        success_message='Imported "' + import_name + '"',
+        error='Import "' + import_name + '" could not be retrieved from "' + address + '"',
+        steps=[
+            (GIT, 'clone', '--no-checkout', address, temp_path),
+            (GIT, COMMAND_PATH, temp_path, 'reset'),
+            (GIT, COMMAND_PATH, temp_path, 'checkout', '.jockrc')
+        ])
+
+
 def import_config():
     config = load_config()
     imports = config[IMPORTS]
+    temp_dir = get_tmp_path()
+
+    subprocess.run(('rm', '-rf', temp_dir))
+
     for import_name in imports:
-        imp = imports[import_name]
-        subprocess.run((GIT, 'clone', '--no-checkout', imp[ADDRESS], TMP_IMPORT_DIR + import_name))
-        subprocess.run((GIT, COMMAND_PATH, TMP_IMPORT_DIR + import_name, 'reset'))
-        subprocess.run((GIT, COMMAND_PATH, TMP_IMPORT_DIR + import_name, 'checkout', '.jockrc'))
-        with open(os.path.expanduser(TMP_IMPORT_DIR + import_name + '/.jockrc'), 'r') as imported_file:
+        fetch_remote_rc(import_name, imports[import_name][ADDRESS])
+
+        with open(path.join(temp_dir, import_name, '.jockrc'), 'r') as imported_file:
             imported = yaml.load(imported_file, Loader=Loader)
 
             if DATA not in config[IMPORTS][import_name]:
@@ -72,10 +90,10 @@ def import_config():
             config[IMPORTS][import_name][DATA][REPOSITORIES] = imported[REPOSITORIES]
             config[IMPORTS][import_name][DATA][GROUPS] = imported[GROUPS]
 
-            with open(os.path.expanduser('~/.jockrc'), 'w') as config_file:
+            with open(path.expanduser('~/.jockrc'), 'w') as config_file:
                 yaml.dump(config, config_file, sort_keys=False)
 
-        subprocess.run(('rm', '-rf', TMP_IMPORT_DIR))
+        subprocess.run(('rm', '-rf', temp_dir))
 
 
 def get_selected_repositories(selected_repositories, selected_groups):
@@ -112,3 +130,19 @@ def get_selected_repositories(selected_repositories, selected_groups):
 def exit_with_message(exit_code, message):
     print(message)
     sys.exit(exit_code)
+
+
+def quiet_subprocess(args):
+    return subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT).returncode
+
+
+def subprocess_steps(steps, error=None, success_message=None):
+    for args in steps:
+        exit_code = quiet_subprocess(args)
+        if exit_code > 0:
+            if error is not None:
+                exit_with_message(1, error)
+            return
+
+    if success_message is not None:
+        print(success_message)
