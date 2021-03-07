@@ -7,7 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note, "non-notable" changes may be small patches with no noticeable effect to the user.
 
 ## Unreleased
+### Added
+- Remote Imports
+    - `imports` can be defined in `~/.jockrc` with a remote git `address`
+    - `-i`/`--import-config` will fetch the remote `.jockrc` file and store the repositories & groups under `data`
+    - Imported repositories & groups can be used as normal
 
+### Changed
+- Improved error messages
 
 ## 0.2.0 2020-12-17
 ### Added
