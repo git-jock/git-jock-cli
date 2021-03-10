@@ -5,7 +5,8 @@ from unittest.mock import patch
 
 import yaml
 
-from jock.config import load_config, get_selected_repositories, exit_with_message
+from jock.config import load_config, get_selected_repositories, exit_with_message, validate_config, \
+    assert_config_has_key
 from tests.utils import CONFIG_REPOSITORIES, REPOSITORY_NAMES, GROUP_NAMES, CONFIG_GROUPS
 
 open_name = '%s.open' % __name__
@@ -30,8 +31,14 @@ class TestConfig(TestCase):
         mock_yaml.assert_called_once()
         self.assertEqual(expected_config, actual_config)
 
-    def test_validate_exits_when_config_is_none(self):
-        assert False
+    @patch('jock.config.exit_with_message')
+    def test_validate_exits_when_config_is_none(self, mock_exit):
+        # Given
+        config = None
+        # When
+        validate_config(config)
+        # Then
+        mock_exit.assert_called_once_with(1, 'Config is empty')
 
     def test_validate_calls_assert_config_has_key(self):
         assert False
@@ -39,10 +46,18 @@ class TestConfig(TestCase):
     def test_assert_config_has_key_calls_merge_config_and_import_key(self):
         assert False
 
-    def test_assert_config_has_key_exits_when_key_doesnt_exit(self):
-        assert False
+    @patch('jock.config.merge_config_and_import_key')
+    @patch('jock.config.exit_with_message')
+    def test_assert_config_has_key_exits_when_key_doesnt_exit(self, mock_exit, mock_merge):
+        # Given
+        config = None
+        key = 'some_key'
+        merged = dict({key: dict({})})
 
-    def test_assert_config_has_key_passes_when_key_exits(self):
+        # When
+        assert_config_has_key(config, key)
+        # Then
+        mock_exit.assert_called_once_with(1, 'No ' + key + ' found in config')
         assert False
 
     def test_merge_config_and_import_key_returns_merge(self):
