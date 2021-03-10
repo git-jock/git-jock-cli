@@ -1,10 +1,11 @@
 import os
+import sys
 from unittest import TestCase
 from unittest.mock import patch
 
 import yaml
 
-from jock.config import load_config, get_selected_repositories
+from jock.config import load_config, get_selected_repositories, exit_with_message
 from tests.utils import CONFIG_REPOSITORIES, REPOSITORY_NAMES, GROUP_NAMES, CONFIG_GROUPS
 
 open_name = '%s.open' % __name__
@@ -28,6 +29,32 @@ class TestConfig(TestCase):
         mock_open.assert_called_once_with(expected_expanded_path, 'r')
         mock_yaml.assert_called_once()
         self.assertEqual(expected_config, actual_config)
+
+    def test_validate_exits_when_config_is_none(self):
+        assert False
+
+    def test_validate_calls_assert_config_has_key(self):
+        assert False
+
+    def test_assert_config_has_key_calls_merge_config_and_import_key(self):
+        assert False
+
+    def test_assert_config_has_key_exits_when_key_doesnt_exit(self):
+        assert False
+
+    def test_assert_config_has_key_passes_when_key_exits(self):
+        assert False
+
+    def test_merge_config_and_import_key_returns_merge(self):
+        assert False
+
+    def test_get_tmp_path_returns_tmp_with_jock_dir(self):
+        assert False
+
+    def test_fetch_remote_rc_clones_to_tmp_dir(self):
+        assert False
+
+    # TODO:import_config
 
     @patch('jock.config.load_config')
     def test_get_selected_repositories_returns_selected_repos(self, mock_load_config):
@@ -84,3 +111,15 @@ class TestConfig(TestCase):
         # Then
         mock_load_config.assert_called_once()
         self.assertEqual(expected_repositories, actual_repositories)
+
+    @patch.object(sys, 'exit')
+    def test_exit_with_message_prints_message_and_exits_with_code(self, mock_exit):
+        # Given
+        exit_code = 123
+        message = 'some message'
+        # When
+        exit_with_message(exit_code, message)
+        # Then
+        mock_exit.assert_called_once_with(exit_code)
+
+    # TODO: subprocesses
