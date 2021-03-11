@@ -48,7 +48,7 @@ def merge_config_and_import_key(config, key):
         for import_name in imports:
             imp = imports[import_name]
             if DATA in imp and key in imp[DATA]:
-                merged = {**merged, **config[key]}
+                merged = {**merged, **imp[DATA][key]}
 
     return merged
 

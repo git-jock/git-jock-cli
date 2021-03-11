@@ -1,12 +1,13 @@
 import os
 import sys
+import tempfile
 from unittest import TestCase
 from unittest.mock import patch
 
 import yaml
 
 from jock.config import load_config, get_selected_repositories, exit_with_message, validate_config, \
-    assert_config_has_key
+    assert_config_has_key, merge_config_and_import_key, get_tmp_path, fetch_remote_rc
 from tests.utils import CONFIG_REPOSITORIES, REPOSITORY_NAMES, GROUP_NAMES, CONFIG_GROUPS
 
 open_name = '%s.open' % __name__
@@ -31,8 +32,9 @@ class TestConfig(TestCase):
         mock_yaml.assert_called_once()
         self.assertEqual(expected_config, actual_config)
 
+    @patch('jock.config.assert_config_has_key')
     @patch('jock.config.exit_with_message')
-    def test_validate_exits_when_config_is_none(self, mock_exit):
+    def test_validate_exits_when_config_is_none(self, mock_exit, mock_assert_config):
         # Given
         config = None
         # When
@@ -40,11 +42,14 @@ class TestConfig(TestCase):
         # Then
         mock_exit.assert_called_once_with(1, 'Config is empty')
 
-    def test_validate_calls_assert_config_has_key(self):
-        assert False
-
-    def test_assert_config_has_key_calls_merge_config_and_import_key(self):
-        assert False
+    @patch('jock.config.assert_config_has_key')
+    def test_validate_calls_assert_config_has_key(self, mock_assert_config):
+        # Given
+        config = dict({})
+        # When
+        validate_config(config)
+        # Then
+        mock_assert_config.assert_called_once_with(config, 'repositories')
 
     @patch('jock.config.merge_config_and_import_key')
     @patch('jock.config.exit_with_message')
@@ -52,22 +57,68 @@ class TestConfig(TestCase):
         # Given
         config = None
         key = 'some_key'
-        merged = dict({key: dict({})})
-
+        mock_merge.return_value = dict({})
         # When
         assert_config_has_key(config, key)
         # Then
+        mock_merge.assert_called_once_with(config, key)
         mock_exit.assert_called_once_with(1, 'No ' + key + ' found in config')
-        assert False
 
     def test_merge_config_and_import_key_returns_merge(self):
-        assert False
+        # Given
+        key = 'common_key'
+        config_data = dict({'key1': 123})
+        import_1_data = dict({'key2': 231})
+        import_2_data = dict({'key3': 312})
+        input_config = dict({
+            key: config_data,
+            'imports': dict({
+                'import_1': dict({'data': {**dict({key: import_1_data}), **dict({'other_key': 'abc'})}}),
+                'import_2': dict({'data': {**dict({'other_key': 'cba'}), **dict({key: import_2_data})}})
+            })
+        })
+        expected = {**config_data, **import_1_data, **import_2_data}
+        # When
+        actual = merge_config_and_import_key(input_config, key)
+        # Then
+        self.assertEqual(expected, actual)
 
-    def test_get_tmp_path_returns_tmp_with_jock_dir(self):
-        assert False
+    @patch('jock.config.subprocess_steps')
+    @patch.object(os.path, 'join')
+    @patch('jock.config.get_tmp_path')
+    def test_fetch_remote_rc_clones_to_tmp_dir(self, mock_get_tmp, mock_join, mock_subprocess):
+        # Given
+        import_name = 'import_name'
+        address = 'address'
+        temp_dir = 'tmp_dir'
+        temp_path = 'temp_path'
+        mock_get_tmp.return_value = temp_dir
+        mock_join.return_value = temp_path
+        # When
+        fetch_remote_rc(import_name, address)
+        # Then
+        mock_get_tmp.assert_called_once()
+        mock_join.assert_called_once_with(temp_dir, import_name)
+        mock_subprocess.assert_called_once_with(
+            success_message='Imported "' + import_name + '"',
+            error='Import "' + import_name + '" could not be retrieved from "' + address + '"',
+            steps=[
+                ('git', 'clone', '--no-checkout', address, temp_path),
+                ('git', '-C', temp_path, 'reset'),
+                ('git', '-C', temp_path, 'checkout', '.jockrc')
+            ])
 
-    def test_fetch_remote_rc_clones_to_tmp_dir(self):
-        assert False
+    @patch.object(tempfile, 'gettempdir')
+    @patch.object(os.path, 'join')
+    def test_get_tmp_path_returns_tmp_with_jock_dir(self, mock_join, mock_gettempdir):
+        # Given
+        tempdir = 'something'
+        mock_gettempdir.return_value = tempdir
+        # When
+        get_tmp_path()
+        # Then
+        mock_gettempdir.assert_called_once()
+        mock_join.assert_called_once_with(tempdir, 'jock-imports')
 
     # TODO:import_config
 
