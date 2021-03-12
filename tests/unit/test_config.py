@@ -1,13 +1,14 @@
 import os
+import subprocess
 import sys
 import tempfile
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, call
 
 import yaml
 
 from jock.config import load_config, get_selected_repositories, exit_with_message, validate_config, \
-    assert_config_has_key, merge_config_and_import_key, get_tmp_path, fetch_remote_rc
+    assert_config_has_key, merge_config_and_import_key, get_tmp_path, fetch_remote_rc, import_config
 from tests.utils import CONFIG_REPOSITORIES, REPOSITORY_NAMES, GROUP_NAMES, CONFIG_GROUPS
 
 open_name = '%s.open' % __name__
@@ -51,6 +52,61 @@ class TestConfig(TestCase):
         # Then
         mock_assert_config.assert_called_once_with(config, 'repositories')
 
+    @patch.object(yaml, 'dump')
+    @patch('builtins.open', read_data='data')
+    @patch.object(os.path, 'expanduser')
+    @patch.object(yaml, 'load')
+    @patch.object(os.path, 'join')
+    @patch('jock.config.fetch_remote_rc')
+    @patch.object(subprocess, 'run')
+    @patch('jock.config.get_tmp_path')
+    @patch('jock.config.load_config')
+    def test_import_config_fetches_and_imports(self, mock_load_config, mock_get_tmp_path, mock_run, mock_fetch, mock_join,
+                                               mock_load, mock_expanduser, mock_open, mock_dump):
+        # Given
+        import_1 = dict({'data': dict({'key': 'val'}), 'address': 'address_1'})
+        import_2 = dict({'address': 'address_2', 'not_data': 123})
+        imports = dict({'import_1': import_1, 'import_2': import_2})
+        config = dict({'imports': imports, 'not_imports': 321})
+        mock_load_config.return_value = config
+
+        tmp_dir = 'some_dir'
+        mock_get_tmp_path.return_value = tmp_dir
+
+        run_call = call(('rm', '-rf', tmp_dir))
+
+        fetch_1_call = call('import_1', 'address_1')
+        fetch_2_call = call('import_2', 'address_2')
+
+        imported_1 = dict({'repositories': 123, 'groups': 321})
+        imported_2 = dict({'repositories': 54321})
+
+        join_1 = 'join_1'
+        join_2 = 'join_2'
+        count = 0
+        mock_join.side_effect = lambda n, a: join_1 if count else join_2
+
+        imported = 'imported'
+        mock_load.side_effect = lambda i, l:
+
+        expected_rc_path = '~/.jockrc'
+        expected_expanded_path = '/some/path'
+        mock_expanduser.return_value = expected_expanded_path
+        # When
+        import_config()
+        # Then
+        mock_load_config.assert_called_once()
+        mock_get_tmp_path.assert_called_once()
+        mock_run.assert_has_calls(run_call, run_call)
+        mock_fetch.assert_has_calls(fetch_1_call, fetch_2_call)
+        mock_join.assert_has_calls(call(tmp_dir, 'import_1', '.jockrc'))
+        mock_join.assert_has_calls(call(tmp_dir, 'import_2', '.jockrc'))
+        mock_open.assert_called_once_with(join_1, 'r')
+        mock_open.assert_called_once_with(join_2, 'r')
+        mock_expanduser.assert_called_once_with(expected_rc_path)
+        mock_open.assert_called_once_with(expected_expanded_path, 'w')
+        mock_dump.assert_called()
+
     @patch('jock.config.merge_config_and_import_key')
     @patch('jock.config.exit_with_message')
     def test_assert_config_has_key_exits_when_key_doesnt_exit(self, mock_exit, mock_merge):
@@ -83,6 +139,20 @@ class TestConfig(TestCase):
         # Then
         self.assertEqual(expected, actual)
 
+    @patch.object(tempfile, 'gettempdir')
+    @patch.object(os.path, 'join')
+    def test_get_tmp_path_returns_tmp_with_jock_dir(self, mock_join, mock_gettempdir):
+        # Given
+        tempdir = 'something'
+        mock_gettempdir.return_value = tempdir
+        # When
+        get_tmp_path()
+        # Then
+        mock_gettempdir.assert_called_once()
+        mock_join.assert_called_once_with(tempdir, 'jock-imports')
+
+    # TODO:import_config
+
     @patch('jock.config.subprocess_steps')
     @patch.object(os.path, 'join')
     @patch('jock.config.get_tmp_path')
@@ -107,20 +177,6 @@ class TestConfig(TestCase):
                 ('git', '-C', temp_path, 'reset'),
                 ('git', '-C', temp_path, 'checkout', '.jockrc')
             ])
-
-    @patch.object(tempfile, 'gettempdir')
-    @patch.object(os.path, 'join')
-    def test_get_tmp_path_returns_tmp_with_jock_dir(self, mock_join, mock_gettempdir):
-        # Given
-        tempdir = 'something'
-        mock_gettempdir.return_value = tempdir
-        # When
-        get_tmp_path()
-        # Then
-        mock_gettempdir.assert_called_once()
-        mock_join.assert_called_once_with(tempdir, 'jock-imports')
-
-    # TODO:import_config
 
     @patch('jock.config.load_config')
     def test_get_selected_repositories_returns_selected_repos(self, mock_load_config):
