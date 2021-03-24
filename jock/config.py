@@ -71,6 +71,33 @@ def fetch_remote_rc(import_name, address):
         ])
 
 
+def merge_config_and_imported(config, import_name, imported):
+    if DATA not in config[IMPORTS][import_name]:
+        config[IMPORTS][import_name][DATA] = dict({})
+
+    config[IMPORTS][import_name][DATA][REPOSITORIES] = imported[REPOSITORIES]
+    config[IMPORTS][import_name][DATA][GROUPS] = imported[GROUPS]
+
+    return config
+
+
+def fetch_and_merge_remote(config, imports, import_name, temp_dir):
+    fetch_remote_rc(import_name, imports[import_name][ADDRESS])
+
+    with open(path.join(temp_dir, import_name, '.jockrc'), 'r') as imported_file:
+        imported = yaml.load(imported_file, Loader=Loader)
+
+        config = merge_config_and_imported(config, import_name, imported)
+
+        with open(path.expanduser('~/.jockrc'), 'w') as config_file:
+            yaml.dump(config, config_file, sort_keys=False)
+
+
+def fetch_and_merge_remotes(config, imports, temp_dir):
+    for import_name in imports:
+        fetch_and_merge_remote(config, imports, import_name, temp_dir)
+
+
 def import_config():
     config = load_config()
     imports = config[IMPORTS]
@@ -78,20 +105,7 @@ def import_config():
 
     subprocess.run(('rm', '-rf', temp_dir))
 
-    for import_name in imports:
-        fetch_remote_rc(import_name, imports[import_name][ADDRESS])
-
-        with open(path.join(temp_dir, import_name, '.jockrc'), 'r') as imported_file:
-            imported = yaml.load(imported_file, Loader=Loader)
-
-            if DATA not in config[IMPORTS][import_name]:
-                config[IMPORTS][import_name][DATA] = dict({})
-
-            config[IMPORTS][import_name][DATA][REPOSITORIES] = imported[REPOSITORIES]
-            config[IMPORTS][import_name][DATA][GROUPS] = imported[GROUPS]
-
-            with open(path.expanduser('~/.jockrc'), 'w') as config_file:
-                yaml.dump(config, config_file, sort_keys=False)
+    fetch_and_merge_remotes(config, imports, temp_dir)
 
     subprocess.run(('rm', '-rf', temp_dir))
 

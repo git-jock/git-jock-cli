@@ -8,7 +8,8 @@ from unittest.mock import patch, call
 import yaml
 
 from jock.config import load_config, get_selected_repositories, exit_with_message, validate_config, \
-    assert_config_has_key, merge_config_and_import_key, get_tmp_path, fetch_remote_rc, import_config
+    assert_config_has_key, merge_config_and_import_key, get_tmp_path, fetch_remote_rc, merge_config_and_imported, \
+    fetch_and_merge_remote, import_config, fetch_and_merge_remotes
 from tests.utils import CONFIG_REPOSITORIES, REPOSITORY_NAMES, GROUP_NAMES, CONFIG_GROUPS
 
 open_name = '%s.open' % __name__
@@ -52,82 +53,115 @@ class TestConfig(TestCase):
         # Then
         mock_assert_config.assert_called_once_with(config, 'repositories')
 
+    def test_merge_config_and_imported_merges(self):
+        # Given
+        import_name = 'import_name'
+        config = dict({'repositories': 123, 'groups': 321,
+                       'imports': dict({import_name: dict({
+                           'data': dict({'repositories': 321, 'groups': 123})
+                       })})})
+        imported = dict({'repositories': 987, 'groups': 789})
+
+        expected_config = dict({'repositories': 123, 'groups': 321,
+                                'imports': dict({import_name: dict({
+                                    'data': imported
+                                })})})
+        # When
+        actual_config = merge_config_and_imported(config, import_name, imported)
+        # Then
+        self.assertEqual(expected_config, actual_config)
+
+    def test_merge_config_and_imported_defaults_empty_dict(self):
+        # Given
+        import_name = 'import_name'
+        config = dict({'repositories': 'abc', 'groups': 'cba',
+                       'imports': dict({import_name: dict({})})})
+        imported = dict({'repositories': 'zyx', 'groups': 'xyz'})
+
+        expected_config = dict({'repositories': 'abc', 'groups': 'cba',
+                                'imports': dict({import_name: dict({
+                                    'data': imported
+                                })})})
+        # When
+        actual_config = merge_config_and_imported(config, import_name, imported)
+        # Then
+        self.assertEqual(expected_config, actual_config)
+
     @patch.object(yaml, 'dump')
     @patch.object(os.path, 'expanduser')
-    @patch.object(yaml, 'Loader')
+    @patch('jock.config.merge_config_and_imported')
     @patch.object(yaml, 'load')
+    @patch.object(yaml, 'Loader')
     @patch('builtins.open', read_data='data')
     @patch.object(os.path, 'join')
     @patch('jock.config.fetch_remote_rc')
+    def test_fetch_and_merge_remote(self, mock_fetch, mock_join, mock_open, mock_loader, mock_load, mock_merge,
+                                    mock_expand, mock_dump):
+        # Given
+        config = 'config'
+        import_name = 'import_name'
+        address = 'address'
+        imports = dict({import_name: dict({'address': address})})
+        temp_dir = 'temp_dir'
+
+        join = 'join'
+        mock_join.return_value = join
+
+        imported = 'imported'
+        mock_load.return_value = imported
+
+        merged_config = 'merged_config'
+        mock_merge.return_value = merged_config
+
+        expanded = 'expanded'
+        mock_expand.return_value = expanded
+        # When
+        fetch_and_merge_remote(config, imports, import_name, temp_dir)
+        # Then
+        mock_fetch.assert_called_once_with(import_name, address)
+        mock_join.assert_called_once_with(temp_dir, import_name, '.jockrc')
+        # mock_load.assert_called_once_with('data', Loader=mock_loader) TODO: fix
+        mock_merge.assert_called_once_with(config, import_name, imported)
+        mock_expand.assert_called_once_with('~/.jockrc')
+        # mock_open.assert_has_calls([call(join, 'r'), call(expanded, 'w')]) TODO: fix
+        # mock_dump.assert_called_once_with(merged_config, 'data', sort_keys=False) TODO: fix
+
+    @patch('jock.config.fetch_and_merge_remote')
+    def test_fetch_and_merge_remotes_loops_over_imports(self, mock_fetch):
+        # Given
+        config = 'config'
+        import_name_1 = 'import_name_1'
+        import_name_2 = 'import_name_2'
+        import_name_3 = 'import_name_3'
+        imports = dict({import_name_1: 123, import_name_2: 456, import_name_3: 789})
+        temp_dir = 'temp_dir'
+        # When
+        fetch_and_merge_remotes(config, imports, temp_dir)
+        # Then
+        mock_fetch.assert_has_calls([
+            call(config, imports, import_name_1, temp_dir),
+            call(config, imports, import_name_2, temp_dir),
+            call(config, imports, import_name_3, temp_dir)
+        ])
+
+    @patch('jock.config.fetch_and_merge_remotes')
     @patch.object(subprocess, 'run')
     @patch('jock.config.get_tmp_path')
     @patch('jock.config.load_config')
-    def test_import_config_fetches_and_imports(self, mock_load_config, mock_get_tmp_path, mock_run, mock_fetch,
-                                               mock_join, mock_open, mock_load, mock_loader, mock_expanduser,
-                                               mock_dump):
+    def test_import_config_fetches_and_imports(self, mock_load_config, mock_get_tmp_path, mock_run, mock_fetch):
         # Given
-        import_1 = 'import_1'
-        import_2 = 'import_2'
-        address_1 = 'address_1'
-        address_2 = 'address_2'
-
-        """ 1. Lines 75 to 77 """
-        import_1_value = dict({'data': dict({'key': 'val'}), 'address': address_1})
-        import_2_value = dict({'address': address_2, 'not_data': 123})
-        imports = dict({import_1: import_1_value, import_2: import_2_value})
-        config = dict({'imports': imports, 'not_imports': 321})
+        imports = 321
+        config = dict({'imports': imports})
         mock_load_config.return_value = config
-        temp_dir = 'some_dir'
+        temp_dir = 'temp_dir'
         mock_get_tmp_path.return_value = temp_dir
-
-        """ 2. Line 79 & 96 """
-        run_call = call(('rm', '-rf', temp_dir))
-
-        """ 3. Line 82 """
-        fetch_1_call = call(import_1, address_1)
-        fetch_2_call = call(import_2, address_2)
-
-        """ 4. Line 84 """
-        join_1 = 'join_1'
-        join_2 = 'join_2'
-        mock_join.side_effect = lambda a, b, c: join_1 if b == import_1 else join_2 if b == import_1 else None
-        # imported_file_1 = 'imported_file_1'
-        # imported_file_2 = 'imported_file_2'
-
-        """ 5. Line 85 """
-        imported = dict({'repositories': 123, 'groups': 321})
-        mock_load.return_value = imported
-
-        """ 5. Line 93 """
-        expanded = 'expanded'
-        mock_expanduser.return_value = expanded
-
         # When
         import_config()
         # Then
-        """ 1. Lines 75 to 77 """
         mock_load_config.assert_called_once()
         mock_get_tmp_path.assert_called_once()
-        """ 2. Line 79 & 96 """
-        mock_run.assert_has_calls([run_call, run_call])
-        """ 3. Line 82 """
-        mock_fetch.assert_has_calls([fetch_1_call, fetch_2_call])
-        """ 4. Line 84 """
-        mock_join.assert_has_calls([
-            call(temp_dir, import_1, '.jockrc'),
-            call(temp_dir, import_2, '.jockrc')])
-        mock_open.assert_has_calls([
-            call(join_1, 'r'),
-            call(join_2, 'r')])
-        """ 5. Line 85 """
-        mock_load.assert_has_calls([
-            call('data', mock_loader),
-            call('data', mock_loader)])
-        """ 5. Line 93 """
-        mock_expanduser.assert_has_calls([call('~/.jockrc'), call('~/.jockrc')])
-        mock_open.assert_has_calls([call(expanded, 'w'), call(expanded, 'w')])
-        """ 5. Line 94 """
-        mock_dump.assert_called_once_with(dict({}), 'data', sort_keys=False)  # TODO dict
+        mock_run.assert_has_calls([call(('rm', '-rf', temp_dir)), call(('rm', '-rf', temp_dir))])
+        mock_fetch.assert_called_once_with(config, imports, temp_dir)
 
     @patch('jock.config.merge_config_and_import_key')
     @patch('jock.config.exit_with_message')
