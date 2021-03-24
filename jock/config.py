@@ -93,7 +93,7 @@ def import_config():
             with open(path.expanduser('~/.jockrc'), 'w') as config_file:
                 yaml.dump(config, config_file, sort_keys=False)
 
-        subprocess.run(('rm', '-rf', temp_dir))
+    subprocess.run(('rm', '-rf', temp_dir))
 
 
 def get_selected_repositories(selected_repositories, selected_groups):

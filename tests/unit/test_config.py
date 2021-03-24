@@ -53,59 +53,81 @@ class TestConfig(TestCase):
         mock_assert_config.assert_called_once_with(config, 'repositories')
 
     @patch.object(yaml, 'dump')
-    @patch('builtins.open', read_data='data')
     @patch.object(os.path, 'expanduser')
+    @patch.object(yaml, 'Loader')
     @patch.object(yaml, 'load')
+    @patch('builtins.open', read_data='data')
     @patch.object(os.path, 'join')
     @patch('jock.config.fetch_remote_rc')
     @patch.object(subprocess, 'run')
     @patch('jock.config.get_tmp_path')
     @patch('jock.config.load_config')
-    def test_import_config_fetches_and_imports(self, mock_load_config, mock_get_tmp_path, mock_run, mock_fetch, mock_join,
-                                               mock_load, mock_expanduser, mock_open, mock_dump):
+    def test_import_config_fetches_and_imports(self, mock_load_config, mock_get_tmp_path, mock_run, mock_fetch,
+                                               mock_join, mock_open, mock_load, mock_loader, mock_expanduser,
+                                               mock_dump):
         # Given
-        import_1 = dict({'data': dict({'key': 'val'}), 'address': 'address_1'})
-        import_2 = dict({'address': 'address_2', 'not_data': 123})
-        imports = dict({'import_1': import_1, 'import_2': import_2})
+        import_1 = 'import_1'
+        import_2 = 'import_2'
+        address_1 = 'address_1'
+        address_2 = 'address_2'
+
+        """ 1. Lines 75 to 77 """
+        import_1_value = dict({'data': dict({'key': 'val'}), 'address': address_1})
+        import_2_value = dict({'address': address_2, 'not_data': 123})
+        imports = dict({import_1: import_1_value, import_2: import_2_value})
         config = dict({'imports': imports, 'not_imports': 321})
         mock_load_config.return_value = config
+        temp_dir = 'some_dir'
+        mock_get_tmp_path.return_value = temp_dir
 
-        tmp_dir = 'some_dir'
-        mock_get_tmp_path.return_value = tmp_dir
+        """ 2. Line 79 & 96 """
+        run_call = call(('rm', '-rf', temp_dir))
 
-        run_call = call(('rm', '-rf', tmp_dir))
+        """ 3. Line 82 """
+        fetch_1_call = call(import_1, address_1)
+        fetch_2_call = call(import_2, address_2)
 
-        fetch_1_call = call('import_1', 'address_1')
-        fetch_2_call = call('import_2', 'address_2')
-
-        imported_1 = dict({'repositories': 123, 'groups': 321})
-        imported_2 = dict({'repositories': 54321})
-
+        """ 4. Line 84 """
         join_1 = 'join_1'
         join_2 = 'join_2'
-        count = 0
-        mock_join.side_effect = lambda n, a: join_1 if count else join_2
+        mock_join.side_effect = lambda a, b, c: join_1 if b == import_1 else join_2 if b == import_1 else None
+        # imported_file_1 = 'imported_file_1'
+        # imported_file_2 = 'imported_file_2'
 
-        imported = 'imported'
-        mock_load.side_effect = lambda i, l:
+        """ 5. Line 85 """
+        imported = dict({'repositories': 123, 'groups': 321})
+        mock_load.return_value = imported
 
-        expected_rc_path = '~/.jockrc'
-        expected_expanded_path = '/some/path'
-        mock_expanduser.return_value = expected_expanded_path
+        """ 5. Line 93 """
+        expanded = 'expanded'
+        mock_expanduser.return_value = expanded
+
         # When
         import_config()
         # Then
+        """ 1. Lines 75 to 77 """
         mock_load_config.assert_called_once()
         mock_get_tmp_path.assert_called_once()
-        mock_run.assert_has_calls(run_call, run_call)
-        mock_fetch.assert_has_calls(fetch_1_call, fetch_2_call)
-        mock_join.assert_has_calls(call(tmp_dir, 'import_1', '.jockrc'))
-        mock_join.assert_has_calls(call(tmp_dir, 'import_2', '.jockrc'))
-        mock_open.assert_called_once_with(join_1, 'r')
-        mock_open.assert_called_once_with(join_2, 'r')
-        mock_expanduser.assert_called_once_with(expected_rc_path)
-        mock_open.assert_called_once_with(expected_expanded_path, 'w')
-        mock_dump.assert_called()
+        """ 2. Line 79 & 96 """
+        mock_run.assert_has_calls([run_call, run_call])
+        """ 3. Line 82 """
+        mock_fetch.assert_has_calls([fetch_1_call, fetch_2_call])
+        """ 4. Line 84 """
+        mock_join.assert_has_calls([
+            call(temp_dir, import_1, '.jockrc'),
+            call(temp_dir, import_2, '.jockrc')])
+        mock_open.assert_has_calls([
+            call(join_1, 'r'),
+            call(join_2, 'r')])
+        """ 5. Line 85 """
+        mock_load.assert_has_calls([
+            call('data', mock_loader),
+            call('data', mock_loader)])
+        """ 5. Line 93 """
+        mock_expanduser.assert_has_calls([call('~/.jockrc'), call('~/.jockrc')])
+        mock_open.assert_has_calls([call(expanded, 'w'), call(expanded, 'w')])
+        """ 5. Line 94 """
+        mock_dump.assert_called_once_with(dict({}), 'data', sort_keys=False)  # TODO dict
 
     @patch('jock.config.merge_config_and_import_key')
     @patch('jock.config.exit_with_message')
