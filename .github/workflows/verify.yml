@@ -32,7 +32,7 @@ jobs:
           COVERALLS_PARALLEL: true
         run: |
           pytest --cov=jock
-          coveralls --service=github
+          coveralls
   coveralls:
     name: Finish Coveralls
     needs: validate_python
