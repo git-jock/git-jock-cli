@@ -129,11 +129,14 @@ def get_selected_repositories(selected_repositories, selected_groups):
 
     if config.get(GROUPS) is not None:
         for group_name in selected_groups:
-            if group_name in groups:
+            if group_name not in groups:
+                exit_with_message(1, 'Group "' + group_name + '" not found in config')
+            elif REPOSITORIES not in groups[group_name]:
+                exit_with_message(1, 'Group "' + group_name + '" has no repository field')
+            else:
                 for repo_name in groups[group_name][REPOSITORIES]:
                     selected[repo_name] = repositories[repo_name]
-            else:
-                exit_with_message(1, 'Group "' + group_name + '" not found in config')
+
 
     if len(selected) == 0:
         exit_with_message(1, 'No repositories selected')
