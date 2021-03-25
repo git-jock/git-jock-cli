@@ -16,7 +16,7 @@ Much like this image, the tool is under construction.
       <a href="#"><img src="docresrouces/line.png" height="1"></a>
     </td>
   </tr>
-  
+
   <tr>
     <td align="center">:rocket:</td>
     <td align="center">
@@ -48,24 +48,28 @@ Much like this image, the tool is under construction.
 
 ## What is Jock CLI?
 
-The CLI is intended to make dealing with multiple connected repositories easier, by grouping repositories and running 
+The CLI is intended to make dealing with multiple connected repositories easier, by grouping repositories and running
 git commands across them all.
 
 ## Install
 
-To install or update on Linux or MacOS, you can download from 
+To install or update on Linux or MacOS, you can download from
 [releases](https://github.com/git-jock/git-jock-cli/releases/latest) or run:
+
 ```bash
 curl -s -L https://raw.githubusercontent.com/git-jock/git-jock-cli/main/scripts/install.sh | bash
 ```
-:warning: _Note this script uses sudo to move the binary to `/usr/local/bin` and you should check the script before 
+
+:warning: _Note this script uses sudo to move the binary to `/usr/local/bin` and you should check the script before
 execution._
 
 ## Usage
 
 ### Configuration
 
-Repositories and groups must be configured in `~/.jockrc`, in YAML format like below
+Repositories and groups must be configured in `~/.jockrc`, in YAML format like below.
+
+Imports can be added with an address, and imported using `jock -i/--import-config`
 
 ```yaml
 repositories:
@@ -85,12 +89,41 @@ groups:
     repositories:
       - auth-service
       - user-service
+
+imports:
+  my-org:
+    address: git@github.com:my-org/local-shop-main.git
+    data:
+      repositories:
+        parent-pom:
+          address: git@github.com:my-org/parent-pom.git
+          location: ~/git/my-org/parent-pom
+        email-service:
+          address: git@github.com:my-org/email-service.git
+          location: ~/git/my-org/email-service
+      groups:
+        java:
+          repositories:
+            - parent-pom
+            - email-service
 ```
 
 - `address` is the remote git address
 - `location` is the local location, can be relative to home or absolute
 
 ### CLI Usage
+
+`jock [OPTIONS] COMMAND [ARGS]` where `[OPTIONS]` are for jock, `COMMAND` is the supported git command, and `[ARGS]`
+(including flags) are passed to the git `COMMAND`.
+
+#### Examples
+
+- `jock -g services clone` clones from git `address` into the specified `location` for each repo within the services
+  group
+- `jock -r auth-service -r user-service pull` pulls into the `location` folders for each repo
+- `jock -g services branch --show-current` prints the current branch of each repo within the services group
+
+#### Help
 
 ```
 Usage: jock [OPTIONS] COMMAND [ARGS]...
@@ -105,21 +138,22 @@ Options:
                          wish to run commands on.Multiple  groups can be
                          specified using multiple flags.
 
+  -i, --import-config    Import (or reimport) remote configs.
   --help                 Show this message and exit.
 
 Commands:
   add branch checkout clone commit fetch pull push reset restore rm switch
 ```
-- OPTIONS can be `--version`, `--help` or a list of repositories such as `-r git-jock-cli` or `--repository 
-some-service`
-- COMMAND is any of the currently supported git commands: `add`, `branch`, `checkout`, `clone`, `commit`, `fetch`, 
-`pull`, `push`, `reset`, `restore`, `rm`, `switch`, or `tag`
-- ARGS are git arguments passed directly to the git command
 
+- OPTIONS can be `--version`, `--help` or a list of repositories such as `-r git-jock-cli`
+  or `--repository some-service`
+- COMMAND is any of the currently supported git commands: `add`, `branch`, `checkout`, `clone`, `commit`, `fetch`,
+  `pull`, `push`, `reset`, `restore`, `rm`, `switch`, or `tag`
+- ARGS are git arguments passed directly to the git command
 
 ## Roadmap
 
-This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to 
+This is a loose roadmap to explain where the tool will end up, the versions & functionality against them are open to
 changes.
 
 ### 0.3 +

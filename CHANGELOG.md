@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note, "non-notable" changes may be small patches with no noticeable effect to the user.
 
 ## Unreleased
+
+## 0.3.0 2021-03-25
 ### Added
 - Remote Imports
     - `imports` can be defined in `~/.jockrc` with a remote git `address`
