@@ -1,13 +1,19 @@
 import click
 
 from jock import __version__
-from jock.config import get_selected_repositories
+from jock.config import get_selected_repositories, import_config
 from jock.git import git_command
 
 CONFIG_REPOSITORIES = 'config_repositories'
 SELECTED_REPOSITORIES = 'selected_repositories'
 GIT_ARGS = 'git_args'
 CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
+
+
+def import_it(ctx, a):
+    if a:
+        import_config()
+        ctx.exit()
 
 
 @click.group()
@@ -22,8 +28,10 @@ CONTEXT_SETTINGS = dict(ignore_unknown_options=True, )
                    '~/.jockrc, you wish to run commands on.'
                    'Multiple  groups can be specified using '
                    'multiple flags.')
+@click.option('--import-config', '-i', is_flag=True, callback=import_it,
+              help='Import (or reimport) remote configs.')
 @click.pass_context
-def main(ctx, repository, group):
+def main(ctx, repository, group, import_config):
     ctx.ensure_object(dict)
 
     repositories = tuple(map(lambda x: x.lstrip(" ="), repository))
