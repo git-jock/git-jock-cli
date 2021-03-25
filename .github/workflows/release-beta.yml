@@ -49,7 +49,7 @@ jobs:
           git config --global user.name 'GitHub'
           git config --global user.email 'github@users.noreply.github.com'
           git checkout -b release-$NEW_VERSION
-          git add ./setup.py ./pyproject.toml
+          git add ./setup.py ./pyproject.toml ./jock/__init__.py
           git commit -m "$COMMIT_MESSAGE"
           git push --set-upstream origin release-$NEW_VERSION
           echo "CURRENT_REF=$(git show-ref --hash --head HEAD)" >> $GITHUB_ENV
